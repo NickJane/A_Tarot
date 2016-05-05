@@ -1,0 +1,2 @@
+You must include WebsitesScreenshot.dll in the BIN folder.
+

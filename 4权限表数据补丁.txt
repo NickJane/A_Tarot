@@ -1,0 +1,29 @@
+  insert into [Tarot].[dbo].[Auth_Resource] values('001002',1,null,2,'塔罗',2)
+  insert into [Tarot].[dbo].[Auth_Resource] values('001002001',1,null,3,'牌和牌阵',1)
+  insert into [Tarot].[dbo].[Auth_Resource] values('001002001001',1,null,4,'塔罗牌',1)
+  insert into [Tarot].[dbo].[Auth_Resource] values('001002001002',1,null,4,'牌阵',2)
+  update [Tarot].[dbo].[Auth_Resource] set ResourceUrl='/TarotCard/List' where ResourceCode='001002001001'
+  update [Tarot].[dbo].[Auth_Resource] set ResourceUrl='/CardFormation/List' where ResourceCode='001002001002'
+    insert into [Tarot].[dbo].[Auth_Resource] values('001002001003',1,'/Tag/List',4,'塔罗主题',3)
+  go --20111126
+  insert into [Tarot].[dbo].[Auth_Resource] values('001002001002001',1,null,5,'绑定塔罗牌和主题',1)
+
+   insert into [Tarot].[dbo].[Auth_Resource] values('001001002',1,null,3,'系统配置',2)
+  insert into [Tarot].[dbo].[Auth_Resource] values('001001002001',1,'/Sysconfig/SystemParams',4,'参数设定',1)
+  insert into [Tarot].[dbo].[Auth_Resource] values('001001002002',1,'/Sysconfig/BadWords',4,'关键字过滤',2)
+  insert into [Tarot].[dbo].[Auth_Resource] values('001001002003',1,'/Sysconfig/NoCatchException',4,'不需要捕获的异常',3)
+  insert into [Tarot].[dbo].[Auth_Resource] values('001001002004',1,'/Sysconfig/UpdateStaticValues',4,'更新网站静态化数据',4)
+
+     insert into [Tarot].[dbo].[Auth_Resource] values('001001003',1,null,3,'日志记录',2)
+  insert into [Tarot].[dbo].[Auth_Resource] values('001001003001',1,'/Sysconfig/SystemLog',4,'日志记录',1)
+
+   insert into [Auth_Resource](ResourceCode,[State], ResourceUrl,ResourceType, LanguageCode, OrderIndex)
+  values('002001',1,null,2,'塔罗来了',1)
+  insert into [Auth_Resource](ResourceCode,[State], ResourceUrl,ResourceType, LanguageCode, OrderIndex)
+  values('002001001',1,null,3,'权限管理',1)
+  insert into [Auth_Resource](ResourceCode,[State], ResourceUrl,ResourceType, LanguageCode, OrderIndex)
+  values('002001001001',1,null,4,'管理员',1)
+  insert into [Auth_Resource](ResourceCode,[State], ResourceUrl,ResourceType, LanguageCode, OrderIndex)
+  values('002001001001001',1,null,5,'帖子增删改',1)
+  insert into [Auth_Resource](ResourceCode,[State], ResourceUrl,ResourceType, LanguageCode, OrderIndex)
+  values('002001001001002',1,null,5,'评论增删改',2)

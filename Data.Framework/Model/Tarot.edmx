@@ -1,0 +1,425 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TarotModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="TarotModelStoreContainer">
+          <EntitySet Name="CardFormation" EntityType="TarotModel.Store.CardFormation" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CardFormationCore" EntityType="TarotModel.Store.CardFormationCore" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Dic_Province" EntityType="TarotModel.Store.Dic_Province" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Dictionary" EntityType="TarotModel.Store.Dictionary" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Ral_CardF_Tag" EntityType="TarotModel.Store.Ral_CardF_Tag" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SystemConfig" EntityType="TarotModel.Store.SystemConfig" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Tag" EntityType="TarotModel.Store.Tag" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TarotCard" EntityType="TarotModel.Store.TarotCard" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Ral_CardF_Card_CardFormation" Association="TarotModel.Store.FK_Ral_CardF_Card_CardFormation">
+            <End Role="CardFormation" EntitySet="CardFormation" />
+            <End Role="CardFormationCore" EntitySet="CardFormationCore" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ral_CardF_Tag_CardFormation" Association="TarotModel.Store.FK_Ral_CardF_Tag_CardFormation">
+            <End Role="CardFormation" EntitySet="CardFormation" />
+            <End Role="Ral_CardF_Tag" EntitySet="Ral_CardF_Tag" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ral_CardF_Tag_Tag" Association="TarotModel.Store.FK_Ral_CardF_Tag_Tag">
+            <End Role="Tag" EntitySet="Tag" />
+            <End Role="Ral_CardF_Tag" EntitySet="Ral_CardF_Tag" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="CardFormation">
+          <Key>
+            <PropertyRef Name="CardFormationID" />
+          </Key>
+          <Property Name="CardFormationID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="FormationName" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Describe" Type="nvarchar" Nullable="false" MaxLength="500" />
+          <Property Name="Popularity" Type="int" Nullable="false" />
+          <Property Name="State" Type="int" Nullable="false" />
+          <Property Name="NeedAllCards" Type="int" Nullable="false" />
+          <Property Name="PlaceHeight" Type="int" Nullable="false" />
+          <Property Name="PlaceWidth" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CardFormationCore">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="FormationID" Type="int" Nullable="false" />
+          <Property Name="IsHandstand" Type="bit" Nullable="false" />
+          <Property Name="IsPointCard" Type="bit" Nullable="false" />
+          <Property Name="X" Type="int" Nullable="false" />
+          <Property Name="Y" Type="int" Nullable="false" />
+          <Property Name="SortIndex" Type="int" Nullable="false" />
+          <Property Name="Describe" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="W" Type="int" Nullable="false" />
+          <Property Name="H" Type="int" />
+        </EntityType>
+        <EntityType Name="Dic_Province">
+          <Key>
+            <PropertyRef Name="ProvinceId" />
+          </Key>
+          <Property Name="ProvinceId" Type="int" Nullable="false" />
+          <Property Name="ProvinceName" Type="nvarchar" MaxLength="50" />
+          <Property Name="CountryId" Type="int" />
+        </EntityType>
+        <EntityType Name="Dictionary">
+          <Key>
+            <PropertyRef Name="EnumDictionaryId" />
+          </Key>
+          <Property Name="EnumDictionaryId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="EnumName" Type="nvarchar" MaxLength="50" />
+          <Property Name="EnumValue" Type="nvarchar" MaxLength="50" />
+          <Property Name="EuumGroupName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Ral_CardF_Tag">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CardFormationID" Type="int" Nullable="false" />
+          <Property Name="TagID" Type="int" Nullable="false" />
+          <Property Name="CecommendLevel" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SystemConfig">
+          <Key>
+            <PropertyRef Name="_ID" />
+          </Key>
+          <Property Name="_ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="_Key" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="_Value" Type="nvarchar" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="TagID" />
+          </Key>
+          <Property Name="TagID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="TagName" Type="nchar" Nullable="false" MaxLength="10" />
+          <Property Name="Popularity" Type="int" Nullable="false" />
+          <Property Name="State" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TarotCard">
+          <Key>
+            <PropertyRef Name="CardID" />
+          </Key>
+          <Property Name="CardID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CardName" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="CardUrl" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="IsGongTingPai" Type="bit" />
+          <Property Name="IsBigAkana" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Ral_CardF_Card_CardFormation">
+          <End Role="CardFormation" Type="TarotModel.Store.CardFormation" Multiplicity="1" />
+          <End Role="CardFormationCore" Type="TarotModel.Store.CardFormationCore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CardFormation">
+              <PropertyRef Name="CardFormationID" />
+            </Principal>
+            <Dependent Role="CardFormationCore">
+              <PropertyRef Name="FormationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ral_CardF_Tag_CardFormation">
+          <End Role="CardFormation" Type="TarotModel.Store.CardFormation" Multiplicity="1" />
+          <End Role="Ral_CardF_Tag" Type="TarotModel.Store.Ral_CardF_Tag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CardFormation">
+              <PropertyRef Name="CardFormationID" />
+            </Principal>
+            <Dependent Role="Ral_CardF_Tag">
+              <PropertyRef Name="CardFormationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ral_CardF_Tag_Tag">
+          <End Role="Tag" Type="TarotModel.Store.Tag" Multiplicity="1" />
+          <End Role="Ral_CardF_Tag" Type="TarotModel.Store.Ral_CardF_Tag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tag">
+              <PropertyRef Name="TagID" />
+            </Principal>
+            <Dependent Role="Ral_CardF_Tag">
+              <PropertyRef Name="TagID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TarotModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="TarotEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Ral_CardF_Tag" EntityType="TarotModel.Ral_CardF_Tag" />
+          <EntitySet Name="Tag" EntityType="TarotModel.Tag" />
+          <EntitySet Name="TarotCard" EntityType="TarotModel.TarotCard" />
+          <AssociationSet Name="FK_Ral_CardF_Tag_Tag" Association="TarotModel.FK_Ral_CardF_Tag_Tag">
+            <End Role="Tag" EntitySet="Tag" />
+            <End Role="Ral_CardF_Tag" EntitySet="Ral_CardF_Tag" />
+          </AssociationSet>
+          <EntitySet Name="CardFormation" EntityType="TarotModel.CardFormation" />
+          <AssociationSet Name="FK_Ral_CardF_Tag_CardFormation" Association="TarotModel.FK_Ral_CardF_Tag_CardFormation">
+            <End Role="CardFormation" EntitySet="CardFormation" />
+            <End Role="Ral_CardF_Tag" EntitySet="Ral_CardF_Tag" />
+          </AssociationSet>
+          <EntitySet Name="CardFormationCore" EntityType="TarotModel.CardFormationCore" />
+          <AssociationSet Name="FK_Ral_CardF_Card_CardFormation" Association="TarotModel.FK_Ral_CardF_Card_CardFormation">
+            <End Role="CardFormation" EntitySet="CardFormation" />
+            <End Role="CardFormationCore" EntitySet="CardFormationCore" />
+          </AssociationSet>
+          <EntitySet Name="SystemConfig" EntityType="TarotModel.SystemConfig" />
+          <EntitySet Name="Dic_Province" EntityType="TarotModel.dic_Province" />
+          <EntitySet Name="Dictionary" EntityType="TarotModel.Dictionary" />
+        </EntityContainer>
+        <EntityType Name="Ral_CardF_Tag">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CardFormationID" Type="Int32" Nullable="false" />
+          <Property Name="TagID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Tag" Relationship="TarotModel.FK_Ral_CardF_Tag_Tag" FromRole="Ral_CardF_Tag" ToRole="Tag" />
+          <Property Type="Int32" Name="CecommendLevel" Nullable="false" />
+          <NavigationProperty Name="CardFormation" Relationship="TarotModel.FK_Ral_CardF_Tag_CardFormation" FromRole="Ral_CardF_Tag" ToRole="CardFormation" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="TagID" />
+          </Key>
+          <Property Name="TagID" Type="Int32" Nullable="false" />
+          <Property Name="TagName" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="true" />
+          <Property Name="Popularity" Type="Int32" Nullable="false" />
+          <Property Name="State" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Ral_CardF_Tag" Relationship="TarotModel.FK_Ral_CardF_Tag_Tag" FromRole="Tag" ToRole="Ral_CardF_Tag" />
+        </EntityType>
+        <EntityType Name="TarotCard">
+          <Key>
+            <PropertyRef Name="CardID" />
+          </Key>
+          <Property Name="CardID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CardName" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="CardUrl" Type="String" Nullable="false" MaxLength="30" Unicode="true" FixedLength="false" />
+          <Property Type="Boolean" Name="IsGongTingPai" />
+          <Property Type="Boolean" Name="IsBigAkana" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Ral_CardF_Tag_Tag">
+          <End Role="Tag" Type="TarotModel.Tag" Multiplicity="1" />
+          <End Role="Ral_CardF_Tag" Type="TarotModel.Ral_CardF_Tag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tag">
+              <PropertyRef Name="TagID" />
+            </Principal>
+            <Dependent Role="Ral_CardF_Tag">
+              <PropertyRef Name="TagID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CardFormation">
+          <Key>
+            <PropertyRef Name="CardFormationID" />
+          </Key>
+          <Property Type="Int32" Name="CardFormationID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="FormationName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Describe" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Popularity" Nullable="false" />
+          <Property Type="Int32" Name="State" Nullable="false" />
+          <Property Type="Int32" Name="NeedAllCards" Nullable="false" />
+          <NavigationProperty Name="Ral_CardF_Tag" Relationship="TarotModel.FK_Ral_CardF_Tag_CardFormation" FromRole="CardFormation" ToRole="Ral_CardF_Tag" />
+          <NavigationProperty Name="CardFormationCore" Relationship="TarotModel.FK_Ral_CardF_Card_CardFormation" FromRole="CardFormation" ToRole="CardFormationCore" />
+          <Property Type="Int32" Name="PlaceHeight" Nullable="false" />
+          <Property Type="Int32" Name="PlaceWidth" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Ral_CardF_Tag_CardFormation">
+          <End Type="TarotModel.CardFormation" Role="CardFormation" Multiplicity="1" />
+          <End Type="TarotModel.Ral_CardF_Tag" Role="Ral_CardF_Tag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CardFormation">
+              <PropertyRef Name="CardFormationID" />
+            </Principal>
+            <Dependent Role="Ral_CardF_Tag">
+              <PropertyRef Name="CardFormationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CardFormationCore">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="FormationID" Nullable="false" />
+          <Property Type="Boolean" Name="IsHandstand" Nullable="false" />
+          <Property Type="Boolean" Name="IsPointCard" Nullable="false" />
+          <Property Type="Int32" Name="X" Nullable="false" />
+          <Property Type="Int32" Name="Y" Nullable="false" />
+          <Property Type="Int32" Name="SortIndex" Nullable="false" />
+          <Property Type="String" Name="Describe" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CardFormation" Relationship="TarotModel.FK_Ral_CardF_Card_CardFormation" FromRole="CardFormationCore" ToRole="CardFormation" />
+          <Property Type="Int32" Name="W" Nullable="false" />
+          <Property Type="Int32" Name="H" />
+        </EntityType>
+        <Association Name="FK_Ral_CardF_Card_CardFormation">
+          <End Type="TarotModel.CardFormation" Role="CardFormation" Multiplicity="1" />
+          <End Type="TarotModel.CardFormationCore" Role="CardFormationCore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CardFormation">
+              <PropertyRef Name="CardFormationID" />
+            </Principal>
+            <Dependent Role="CardFormationCore">
+              <PropertyRef Name="FormationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SystemConfig">
+          <Key>
+            <PropertyRef Name="C_ID" />
+          </Key>
+          <Property Type="Int32" Name="C_ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="C_Key" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="C_Value" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="dic_Province">
+          <Key>
+            <PropertyRef Name="ProvinceId" />
+          </Key>
+          <Property Type="Int32" Name="ProvinceId" Nullable="false" />
+          <Property Type="String" Name="ProvinceName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="CountryId" />
+        </EntityType>
+        <EntityType Name="Dictionary">
+          <Key>
+            <PropertyRef Name="EnumDictionaryId" />
+          </Key>
+          <Property Type="Int32" Name="EnumDictionaryId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="EnumName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="EnumValue" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="EuumGroupName" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TarotModelStoreContainer" CdmEntityContainer="TarotEntities">
+          <EntitySetMapping Name="Ral_CardF_Tag"><EntityTypeMapping TypeName="TarotModel.Ral_CardF_Tag"><MappingFragment StoreEntitySet="Ral_CardF_Tag">
+            <ScalarProperty Name="CecommendLevel" ColumnName="CecommendLevel" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+            <ScalarProperty Name="CardFormationID" ColumnName="CardFormationID" />
+            <ScalarProperty Name="TagID" ColumnName="TagID" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Tag"><EntityTypeMapping TypeName="TarotModel.Tag"><MappingFragment StoreEntitySet="Tag">
+            <ScalarProperty Name="TagID" ColumnName="TagID" />
+            <ScalarProperty Name="TagName" ColumnName="TagName" />
+            <ScalarProperty Name="Popularity" ColumnName="Popularity" />
+            <ScalarProperty Name="State" ColumnName="State" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="TarotCard"><EntityTypeMapping TypeName="TarotModel.TarotCard"><MappingFragment StoreEntitySet="TarotCard">
+            <ScalarProperty Name="IsBigAkana" ColumnName="IsBigAkana" />
+                <ScalarProperty Name="IsGongTingPai" ColumnName="IsGongTingPai" />
+                <ScalarProperty Name="CardID" ColumnName="CardID" />
+            <ScalarProperty Name="CardName" ColumnName="CardName" />
+            <ScalarProperty Name="CardUrl" ColumnName="CardUrl" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="CardFormation">
+            <EntityTypeMapping TypeName="TarotModel.CardFormation">
+              <MappingFragment StoreEntitySet="CardFormation">
+                <ScalarProperty Name="PlaceWidth" ColumnName="PlaceWidth" />
+                <ScalarProperty Name="PlaceHeight" ColumnName="PlaceHeight" />
+                <ScalarProperty Name="NeedAllCards" ColumnName="NeedAllCards" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Popularity" ColumnName="Popularity" />
+                <ScalarProperty Name="Describe" ColumnName="Describe" />
+                <ScalarProperty Name="FormationName" ColumnName="FormationName" />
+                <ScalarProperty Name="CardFormationID" ColumnName="CardFormationID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CardFormationCore">
+            <EntityTypeMapping TypeName="TarotModel.CardFormationCore">
+              <MappingFragment StoreEntitySet="CardFormationCore">
+                <ScalarProperty Name="H" ColumnName="H" />
+                <ScalarProperty Name="W" ColumnName="W" />
+                <ScalarProperty Name="Describe" ColumnName="Describe" />
+                <ScalarProperty Name="SortIndex" ColumnName="SortIndex" />
+                <ScalarProperty Name="Y" ColumnName="Y" />
+                <ScalarProperty Name="X" ColumnName="X" />
+                <ScalarProperty Name="IsPointCard" ColumnName="IsPointCard" />
+                <ScalarProperty Name="IsHandstand" ColumnName="IsHandstand" />
+                <ScalarProperty Name="FormationID" ColumnName="FormationID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SystemConfig">
+            <EntityTypeMapping TypeName="TarotModel.SystemConfig">
+              <MappingFragment StoreEntitySet="SystemConfig">
+                <ScalarProperty Name="C_Value" ColumnName="_Value" />
+                <ScalarProperty Name="C_Key" ColumnName="_Key" />
+                <ScalarProperty Name="C_ID" ColumnName="_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dic_Province">
+            <EntityTypeMapping TypeName="TarotModel.dic_Province">
+              <MappingFragment StoreEntitySet="Dic_Province">
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="ProvinceName" ColumnName="ProvinceName" />
+                <ScalarProperty Name="ProvinceId" ColumnName="ProvinceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dictionary">
+            <EntityTypeMapping TypeName="TarotModel.Dictionary">
+              <MappingFragment StoreEntitySet="Dictionary">
+                <ScalarProperty Name="EuumGroupName" ColumnName="EuumGroupName" />
+                <ScalarProperty Name="EnumValue" ColumnName="EnumValue" />
+                <ScalarProperty Name="EnumName" ColumnName="EnumName" />
+                <ScalarProperty Name="EnumDictionaryId" ColumnName="EnumDictionaryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="Tarot">
+        <EntityTypeShape EntityType="TarotModel.Ral_CardF_Tag" Width="1.5" PointX="6" PointY="4.75" Height="1.9700325520833335" IsExpanded="true" />
+        <EntityTypeShape EntityType="TarotModel.Tag" Width="1.5" PointX="3.75" PointY="0.75" Height="1.9700325520833335" IsExpanded="true" />
+        <EntityTypeShape EntityType="TarotModel.TarotCard" Width="1.5" PointX="0.75" PointY="1.875" Height="1.7790128580729174" IsExpanded="true" />
+        <AssociationConnector Association="TarotModel.FK_Ral_CardF_Tag_Tag" ManuallyRouted="false">
+          <ConnectorPoint PointX="5.25" PointY="1.7350162760416668" />
+          <ConnectorPoint PointX="6.75" PointY="1.7350162760416668" />
+          <ConnectorPoint PointX="6.75" PointY="4.75" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="TarotModel.CardFormation" Width="1.5" PointX="0.75" PointY="5.375" Height="2.5430916341145817" />
+        <AssociationConnector Association="TarotModel.FK_Ral_CardF_Tag_CardFormation" >
+          <ConnectorPoint PointX="1.5" PointY="5.375" />
+          <ConnectorPoint PointX="1.5" PointY="4.96875" />
+          <ConnectorPoint PointX="6" PointY="4.96875" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="TarotModel.CardFormationCore" Width="1.5" PointX="3" PointY="5.25" Height="2.7341113281249996" />
+        <AssociationConnector Association="TarotModel.FK_Ral_CardF_Card_CardFormation" >
+          <ConnectorPoint PointX="2.25" PointY="6.6465458170572909" />
+          <ConnectorPoint PointX="3" PointY="6.6465458170572909" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="TarotModel.SystemConfig" Width="1.5" PointX="6.375" PointY="0.75" Height="1.5879931640624996" />
+        <EntityTypeShape EntityType="TarotModel.dic_Province" Width="1.5" PointX="5.375" PointY="7.75" Height="1.5879931640624996" />
+        <EntityTypeShape EntityType="TarotModel.Dictionary" Width="1.5" PointX="7.375" PointY="7.75" Height="1.7790128580729174" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

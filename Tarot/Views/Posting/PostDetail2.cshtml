@@ -1,0 +1,119 @@
+﻿@model Data.MongoFramework.ModelMate.M_Post
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+
+    ViewBag.keywords = "塔罗来了, " + Model.Title;
+    ViewBag.description = Model.Content.Length > 20 ? Model.Content.Substring(0, 20) : Model.Content;
+    ViewBag.FKType = 2;//回帖的帖子类型
+    ViewBag.width1 = 630;
+    ViewBag.PostUserID = Model.m_User.UserID;
+}
+<style type="text/css">
+    .div_postinfoSingle
+    {
+        background-color: #E6EFF4;
+        padding: 0px 10px 0px 10px;
+    }
+    .div_postinfoSingle > div
+    {
+        width: 100%;
+    }
+    .span_contentStart
+    {
+        font-size: 16px;
+        color: #559BD7;
+        margin-right: 10px;
+    }
+</style>
+<div style="float:left; width: 680px; ">
+    <div float class="div1" style="float: left; width: 680px; border: 0px solid red;">
+                                                                                                                                                                                                                                                                                                                                    <div class="div_postinfoSingle">
+        @if (BLL.UserInfo.CurrentUserResources.Contains("002001001001001"))
+        { 
+            <div class="editor-label">
+                @if (Model.PostState == 1)
+                {
+                    <input type="button" value="锁定该贴" onclick="UpdatePost('@Model._id.ToString()','deletepost')" />
+                }
+                else if (Model.PostState == 0)
+                { 
+                    <input type="button" value="恢复该贴" onclick="UpdatePost('@Model._id.ToString()','returnpost')" />
+                }
+            </div><br />
+            <script type="text/javascript">
+                function UpdatePost(id, action) {
+                    $.get("/Posting/" + action + "?rd=" + Math.random(), { id: id, desc: '@Model.Title' }, function (json) {
+                        if (json.State == 1) {
+                            alert('操作成功');
+                        }
+                    })
+                }
+            </script>
+        }
+        <span style="color:Red">@(Model.PostState==(int)BLL.Enums.Mpost_PostState.Lock?"该贴已被锁定!":"")</span> 
+        <div class="editor-label">
+            <span class="span_contentStart">Title</span> <span style="font-size: 18px;">@Model.Title</span>
+        </div>
+        <br />
+        <div class="editor-label" style="word-wrap: break-word;">
+            @*<span class="span_contentStart">Content</span><br />*@ @Html.Raw(Model.Content)
+        </div>
+        <br />
+        <div class="editor-label" style="color: Gray">
+            @{ var headimg = (!User.Identity.IsAuthenticated || string.IsNullOrEmpty(Model.m_User.AvatarURL)) ?
+               Url.Content("~/content/images/men_head.gif") : Model.m_User.AvatarURL; }
+            <div style="float: left">
+                <img src="@headimg" class="imgUserHead" style="width:25px;" />
+                <div style="color: #55B2E4; width: 100px; display: inline;" class="textoverflow">
+                   @if (Model.m_User.UserID == -1)
+                   {
+                    @Model.m_User.NicName
+                   }
+                   else
+                   { 
+                    <span class="span_UserSpecial" UserSpecialID="@Model.m_User.UserSpecialID"></span><a href="/usercenter/userinfo/@Model.m_User.UserID" target="_blank">@Model.m_User.NicName</a>
+                   }
+                </div>
+                &nbsp&nbsp&nbsp&nbsp <span style="font-size: 11px;">@Model.PostTime</span>
+            </div>
+            <div style="float: right; margin-top: 12px;">
+                @(Model.ReplyCount + "/" + Model.PopularityCount)
+                @*<span style="margin: 0px 10px 0px 10px;">查看详情</span>*@
+            </div>
+            <script type="text/javascript">
+                    var jiathis_config = {
+                        data_track_clickback:true,
+                        title:"@Model.Title #塔罗来了#",
+                        summary: '@(Model.Content.Length > 130 ? Model.Content.Substring(0, 120).Replace("'", "").Replace("&nbsp;","").Replace("<br>",".").Replace("<br/>",".") : 
+                        Model.Content.Replace("'", "").Replace("&nbsp;","").Replace("<br>",".").Replace("<br/>","."))'
+                     }
+                </script>
+                
+            <div style="clear: both">
+            </div>
+        </div>
+        
+        <div id="ckepop">
+	        <span class="jiathis_txt">分享到：</span>
+	        <a class="jiathis_button_qzone"></a>
+	        <a class="jiathis_button_tsina"></a>
+	        <a class="jiathis_button_tqq"></a>
+	        <a class="jiathis_button_renren"></a>
+	        <a class="jiathis_button_kaixin001"></a>
+	        <a href="http://www.jiathis.com/share?uid=1566960" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	        <a class="jiathis_counter_style"></a>
+        </div>
+        <br />
+        <div class="editor-label">
+        </div>
+    </div>
+    </div>
+
+    <div class="div1" style="float: left; width: 680px; border: 0px solid red; margin-top:15px;">
+        @{ if (Model.PostState == (int)BLL.Enums.Mpost_PostState.Normal) {Html.RenderPartial("_CommentPartial", Model._id.ToString());}}
+    </div>
+</div>
+@Html.Partial("_LayoutSiteContentRightPart")
+<div style="clear: both">
+</div>

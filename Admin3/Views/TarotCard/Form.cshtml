@@ -1,0 +1,70 @@
+﻿
+@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+@using BLL.Enums;
+@model Data.Framework.Model.TarotCard
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    <fieldset >
+        <legend>@(ViewBag.IsEdit==true?"编辑":"添加")</legend>
+        		@Html.HiddenFor(model => model.CardID)
+		<div class="editor-label">
+			@Html.LabelFor(model => model.CardName)
+		</div>
+		<div class="editor-field">
+			@Html.EditorFor(model => model.CardName)
+			@Html.ValidationMessageFor(model => model.CardName)
+		</div>
+		<br >
+
+		<div class="editor-label">
+			@Html.LabelFor(model => model.CardUrl)
+		</div>
+		<div class="editor-field">
+			@Html.EditorFor(model => model.CardUrl)
+			@Html.ValidationMessageFor(model => model.CardUrl)
+		</div>
+		<br >
+
+		
+		@*  selet example code
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ApplicationID)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.ApplicationID, new SelectList(ApplicationEnum.Admin.ToDictionary(), "key", "value"))
+            @Html.ValidationMessageFor(model => model.ApplicationID)
+        </div>*@
+
+        @Html.ValidationSummary(true)
+        <p>
+            <input type="submit" value="@(!ViewBag.IsEdit?"Add":"Save")" />
+            @*<input type="button" value="123" onclick="$('.l-dialog-waittingdialog,.l-window-mask,.l-dialog', window.parent.document).remove();" />*@
+        </p>
+    </fieldset>
+}
+
+<!--表单验证 -->
+<script>
+    function ValidateForm() {
+    	//更多validate验证方法见 jquery.validate.MethodsExt.js
+        $("form").validate({
+            rules: {    
+	'CardName':{required: true,maxlength: 10}
+            },
+            messages: {
+                	CardID:{required: 'CardID不能为空',number: 'CardID必须为数字'},
+	CardName:{required: 'CardName不能为空',maxlength: 'CardName长度不能超过10'},
+	CardUrl:{required: 'CardUrl不能为空',maxlength: 'CardUrl长度不能超过30'}
+            }
+        });
+    }
+     $("document").ready(function () {
+            ValidateForm();
+     });
+</script>

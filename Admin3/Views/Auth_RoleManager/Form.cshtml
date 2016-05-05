@@ -1,0 +1,154 @@
+﻿
+@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+@using BLL.Enums;
+@model Authorizations.Framework.Model.Auth_Role
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    <fieldset >
+        <legend>@(ViewBag.IsEdit==true?"编辑":"添加")</legend>
+        		@Html.HiddenFor(model => model.RoleID)
+		<div class="editor-label">
+			@Html.LabelFor(model => model.LanguagueCode)
+		</div>
+		<div class="editor-field">
+			@Html.EditorFor(model => model.LanguagueCode)
+			@Html.ValidationMessageFor(model => model.LanguagueCode)
+		</div>
+		<br >
+
+		@*<div class="editor-label">
+            @Html.LabelFor(model => model.State)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.State, new SelectList(State.Lock.ToDictionary(), "key", "value"))
+            @Html.ValidationMessageFor(model => model.State)
+        </div>
+		<br >*@
+
+		<div class="editor-label">
+			@Html.LabelFor(model => model.IsSuperRole)
+		</div>
+		<div class="editor-field">
+			@Html.EditorFor(model => model.IsSuperRole)
+			@Html.ValidationMessageFor(model => model.IsSuperRole)
+		</div>
+		<br >
+
+		<div class="editor-label">
+            @Html.LabelFor(model => model.ApplicationID)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.ApplicationID, new SelectList(ApplicationEnum.Admin.ToDictionary(), "key", "value"),
+         new { onchange = "getResourcesByApplicationID(0,this.value);" })
+            @Html.ValidationMessageFor(model => model.ApplicationID)
+        </div>
+        <script type="text/javascript">
+            if(@(ViewBag.IsEdit == true?1:0)){
+                $("#ApplicationID").attr("disabled","disabled");
+            }
+        </script>
+		<br >
+
+        <div class="editor-label">
+            权限
+        </div>
+        <div class="editor-field" id="divresource">
+            
+        </div>
+		<br >
+		
+		@*  selet example code
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ApplicationID)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.ApplicationID, new SelectList(ApplicationEnum.Admin.ToDictionary(), "key", "value"))
+            @Html.ValidationMessageFor(model => model.ApplicationID)
+        </div>*@
+
+        @Html.ValidationSummary(true)
+        <p>
+            <input type="submit" value="@(!ViewBag.IsEdit?"Add":"Save")" />
+            @*<input type="button" value="123" onclick="$('.l-dialog-waittingdialog,.l-window-mask,.l-dialog', window.parent.document).remove();" />*@
+        </p>
+    </fieldset>
+    
+}
+<script type="text/javascript">
+    function getResourcesByApplicationID(roleid, applicationid) {
+        $.get("/auth_rolemanager/getResourcesByApplicationID?_rand="+Math.random(), { id: applicationid,roleid:roleid }, function (data) {
+            document.getElementById("divresource").innerHTML = data;
+
+            Tools.MergeTableCols($("table", "#div_resources")[0], 1);
+            Tools.MergeTableCols($("table", "#div_resources")[0], 0);
+            BindResCheckbox();
+        })
+    }
+</script>
+<!--表单验证 -->
+<script>
+    function ValidateForm() {
+    	//更多validate验证方法见 jquery.validate.MethodsExt.js
+        $("form").validate({
+            rules: {
+                'RoleID': { required: true, number: true },
+                'LanguagueCode': { required: true, maxlength: 20 },
+                'ApplicationID': { required: true, number: true }
+            },
+            messages: {
+                RoleID: { required: 'RoleID不能为空', number: 'RoleID必须为数字' },
+                LanguagueCode: { required: 'LanguagueCode不能为空', maxlength: 'LanguagueCode长度不能超过20' },
+                State: { required: 'State不能为空', number: 'State必须为数字' },
+                IsSuperRole: { required: 'IsSuperRole不能为空' },
+                ApplicationID: { required: 'ApplicationID不能为空', number: 'ApplicationID必须为数字' }
+            }
+        });
+    }
+    $("document").ready(function () {
+        ValidateForm();
+        getResourcesByApplicationID(@(ViewBag.IsEdit==true?Model.RoleID:0),$("#ApplicationID").val());
+        
+    });
+    
+</script>
+
+
+<script type="text/javascript">
+    function BindResCheckbox() {
+        $(":checkbox", "#div_resources").click(function () {
+            ckbhelp(this, this.checked);
+
+        });
+    }
+
+    function ckbhelp(obj, checked) {
+        
+        if (checked) {
+            $("input:checkbox", "#div_resources").each(function () {
+                if (obj.getAttribute('code').indexOf(this.getAttribute('code')) == 0 || this.getAttribute('code').indexOf(obj.getAttribute('code')) == 0)
+                    this.checked = checked;
+            });
+        }
+        else {
+            $("input:checkbox", "#div_resources").each(function () {
+                if (this.getAttribute('code').indexOf(obj.getAttribute('code')) == 0)
+                    this.checked = checked;
+            });
+
+            var __Temp = function (resCode) {
+                var tempCurr = $("input[code='" + resCode + "']:checkbox", "#div_resources");
+                if ($("input[code^='" + resCode + "']:checkbox:checked", "#div_resources").length == 1)
+                    tempCurr[0].checked = checked;
+                if (resCode.length > 3)
+                    __Temp(resCode.substr(0, resCode.length - 3));
+            }
+            __Temp(obj.getAttribute('code').substr(0, obj.getAttribute('code').length - 3));
+        }
+    }
+</script>

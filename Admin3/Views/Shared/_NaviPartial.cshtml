@@ -1,0 +1,23 @@
+﻿@using Authorizations.Framework;
+@using Authorizations.Framework.Enums;
+@{
+    var code= HttpContext.Current.Items["CurrentResourceCode"].ToString();
+    var lst = AuthVisitor.GetAllResource(null, code.Substring(0,3));
+    var level2=lst.Where(x=>x.ResourceType==(int)ResourceEnum.SecondLevelModule && x.ResourceCode.Equals(code.Substring(0,6))).First();
+    var level3 = lst.Where(x => x.ResourceType == (int)ResourceEnum.ThirdLevelModule && x.ResourceCode.Equals(code.Substring(0, 9))).First();
+    var page = lst.Where(x => x.ResourceType == (int)ResourceEnum.Page && x.ResourceCode.Equals(code.Substring(0, 12))).First();
+    var Button =code.Length<15?null: lst.Where(x => x.ResourceType == (int)ResourceEnum.Button && x.ResourceCode.Equals(code.Substring(0, 15))).FirstOrDefault();
+  }
+  <style type="text/css">
+    .div_Navi{ border:1px solid #BED5F3;  background-color:#EFF5FE; padding:5px;}
+  </style>
+<DIV class="div_Navi"><STRONG>当前位置:</STRONG>
+<A @*href="@level2.ResourceUrl"*@
+>@level2.LanguageCode</A> &gt; 
+<A @*href="@level3.ResourceUrl"*@
+>@level3.LanguageCode</A>   &gt;
+@page.LanguageCode 
+@(Button!=null?">"+Button.LanguageCode:"")
+    
+
+</DIV>

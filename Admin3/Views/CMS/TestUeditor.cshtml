@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "TestUeditor";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+
+<h2>TestUeditor</h2>
+@using (Html.BeginForm())
+{
+<div id="myEditor"></div>
+<script type="text/javascript">
+    var editor = new baidu.editor.ui.Editor();
+    editor.render("myEditor");
+</script>
+<input type="submit" value="submit" />
+}

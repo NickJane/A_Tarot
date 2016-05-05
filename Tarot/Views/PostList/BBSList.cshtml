@@ -1,0 +1,43 @@
+﻿@model IList<Data.MongoFramework.ModelMate.M_Post>
+@using Tarot.Models;
+@{
+    ViewBag.Title = "五花八门";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+    ViewBag.keywords = "塔罗来了, 五花八门";
+    ViewBag.description = "塔罗来了, 五花八门";
+}
+<style type="text/css">
+    .div_postTitle{ border-bottom:1px dotted gray; margin-top:8px; padding-bottom:3px;}
+</style>
+<div style="float: left; width: 680px; border: 0px solid red; padding-right:20px;">
+    <div style="text-align:right"><input type="button" value="发新帖" onclick="javascript:location.href='/posting/posting2';"  /></div>
+    @foreach (var item in Model)
+    {
+        <div class="div_postTitle">
+            <div style="float: left" class="textoverflow"><a href="/posting/postdetail2/@item._id.ToString()">@item.Title</a> </div>
+            <div style="float: right; width:70px; text-align:right; color:Gray" class="divInLineBlock textoverflow">@(item.ReplyCount + "/" + item.PopularityCount)</div>
+            <div style="float: right; width:150px; text-align:right; color:Gray" class="divInLineBlock">@item.LastModifyTime.ToString("yyyy-MM-dd HH:mm:ss")</div>
+            <div style="float: right; width:100px; text-align:right" class="divInLineBlock textoverflow">
+                @if (item.m_User.UserID == -1)
+                {
+                    @item.m_User.NicName
+                }
+                else
+                { 
+                    <span class="span_UserSpecial" UserSpecialID="@item.m_User.UserSpecialID"></span><a href="/usercenter/userinfo/@item.m_User.UserID" target="_blank">@item.m_User.NicName</a>
+                }
+            </div>
+            <div style="clear: both">
+            </div>
+        </div>
+    }
+    <div style="text-align:right"><input type="button" value="发新帖" onclick="javascript:location.href='/posting/posting2';" /></div>
+    <div class="sabrosus">
+        @(Html.myPager((int)ViewBag.PageCount,
+            (int)ViewBag.CurrentPage, x => Url.Action("BBSList", new { id = x })))
+    </div>
+
+</div>
+@Html.Partial("_LayoutSiteContentRightPart")
+<div style="clear: both">
+</div>

@@ -1,0 +1,51 @@
+﻿
+@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+@using BLL.Enums;
+@model Data.Framework.Model.TarotCard
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+
+
+    <fieldset >
+        <legend>详情</legend>
+        		<div class="display-label">
+			@Html.LabelFor(model => model.CardID)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.CardID)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.CardName)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.CardName)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.CardUrl)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.CardUrl)
+		</div>
+		<br >
+
+		
+		@*  selet example code
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ApplicationID)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.ApplicationID, new SelectList(ApplicationEnum.Admin.ToDictionary(), "key", "value"))
+        </div>*@
+
+    </fieldset>
+<p>
+@Html.ActionLink("Edit", "form", new { id=Model.CardID }) 
+        </p>

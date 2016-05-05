@@ -1,0 +1,40 @@
+﻿@if(Request.IsAuthenticated) {
+    <text>欢迎 <strong>@User.Identity.Name</strong>!
+    [ @Html.ActionLink("注销", "Login", "Account") ] <a href="javascript:void(0)" onclick="changepassword('@BLL.UserInfo.UserAccount.UserID',this)">修改密码</a></text>
+}
+else {
+    @:[ @Html.ActionLink("登录", "Login", "Account") ]
+}
+<script type="text/javascript">
+    var uid = "";
+    function changepassword(userid, obj) {
+        var o = $("#target1").clone();
+        uid = userid;
+        $.ligerDialog.open({ target: o });
+
+    }
+    function changepwd(obj) {
+        var p1 = $($("input", obj.parentNode)[0]);
+        var p2 = $($("input", obj.parentNode)[1]);
+        if (p1.val() != p2.val()) {
+            alert('两次密码不一样'); return;
+        } else {
+            $.post("/usermanager/changepwd?rd" + Math.random(), { uid: uid, pwd: p1.val() }, function (json) {
+                if (json.State == 1)
+                    alert('更新成功');
+                else
+                    alert(json.ResponseText);
+            });
+        }
+    }
+</script>
+<div style=" display:none">
+ <div id="target1" style="width:200px; margin:3px;">
+    <h3>提示文本标题</h3>
+    <div>
+        <input type="text" name="newp1" id="newp1" /><BR />
+        <input type="text" name="newp2" id="newp2" /><BR />
+        <input type="button" value="更改密码" onclick="changepwd(this);" />
+    </div>
+ </div>
+ </div>

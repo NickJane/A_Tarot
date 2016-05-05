@@ -1,0 +1,44 @@
+﻿@model Data.MongoFramework.ModelMate.M_Post
+@using Authorizations.Framework.Enums;
+
+
+@using Lib.ClassExt;
+@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+@section HtmlMetas{
+}
+
+@{
+    string[] sildershows = BLL.BLLSystemConfig.Sildershow;
+    }
+
+@using (Html.BeginForm())
+{
+    <fieldset >
+        <legend>参数设定</legend>
+        @for (int i = 0; i < sildershows.Length; i++)
+        {
+            <div class="editor-label">
+                @{
+                    string text = "";
+                    switch (i) { case 0:text = "图片数组"; break; case 1:text = "图片描述数组"; break; case 2:text = "链接地址数组"; break; }
+                }
+                @text
+            </div>
+            <div class="editor-field">
+                <textarea name="@("sildershows"+i)" style="width:500px;">@sildershows[i]</textarea>
+            </div>
+            <br />
+        }
+        @Html.ValidationSummary()
+
+        <p>
+            <input type="submit" value="Save" />
+            @*<input type="button" value="123" onclick="$('.l-dialog-waittingdialog,.l-window-mask,.l-dialog', window.parent.document).remove();" />*@
+        </p>
+    </fieldset>
+}
+
+<!--表单验证 -->

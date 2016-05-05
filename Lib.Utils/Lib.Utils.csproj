@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DF57D0C4-2E07-4C34-A666-EB39E09BF8BC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lib.Utils</RootNamespace>
+    <AssemblyName>Lib.Utils</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Lib.Utils.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Enyim.Caching, Version=2.8.0.0, Culture=neutral, PublicKeyToken=cec98615db04012e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\Enyim.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AsyncHelper.cs" />
+    <Compile Include="CacheHelper.cs" />
+    <Compile Include="Cache\CacheManager.cs" />
+    <Compile Include="Cache\CacheManagerConfig.cs" />
+    <Compile Include="Cache\ICacheManager.cs" />
+    <Compile Include="Cache\MemcachedCacheManager.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="CompressHelper.cs" />
+    <Compile Include="ConfigHelper.cs" />
+    <Compile Include="ConvertHelper.cs" />
+    <Compile Include="CookieHelper.cs" />
+    <Compile Include="Data\DataObjectConverter.cs" />
+    <Compile Include="Data\OleDbHelper.cs" />
+    <Compile Include="Data\Paging\CommonPagingMethods.cs" />
+    <Compile Include="Data\Paging\SqlDataAdapterPagingWrapper.cs" />
+    <Compile Include="Data\SingleDataTableQuery.cs" />
+    <Compile Include="Data\SqlHelper.cs" />
+    <Compile Include="DateTimeHelper.cs" />
+    <Compile Include="DictionaryHelper.cs" />
+    <Compile Include="EncodingTransfer.cs" />
+    <Compile Include="ExportDataHelper.cs" />
+    <Compile Include="ExtensionHelper.cs" />
+    <Compile Include="FileHelper.cs" />
+    <Compile Include="ImageTool.cs" />
+    <Compile Include="JsonHelper.cs" />
+    <Compile Include="ListHelper.cs" />
+    <Compile Include="LogHelper.cs" />
+    <Compile Include="MailHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestHelper.cs" />
+    <Compile Include="Security\DESEncryptor.cs" />
+    <Compile Include="SessionHelper.cs" />
+    <Compile Include="StringHelper.cs" />
+    <Compile Include="Vdn\StreamOceanHelper.cs" />
+    <Compile Include="XmlSerializeHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Libs\Enyim.Caching.dll" />
+    <Content Include="Libs\Enyim.Caching.pdb" />
+    <Content Include="Libs\Enyim.Caching.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

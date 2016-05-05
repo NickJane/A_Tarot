@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MyOLExamModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="MyOLExamModelStoreContainer">
+          <EntitySet Name="Auth_UserAccount" EntityType="MyOLExamModel.Store.Auth_UserAccount" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Auth_UserInfoCore" EntityType="MyOLExamModel.Store.Auth_UserInfoCore" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Auth_UserInfoCore_Auth_UserAccount" Association="MyOLExamModel.Store.FK_Auth_UserInfoCore_Auth_UserAccount">
+            <End Role="Auth_UserAccount" EntitySet="Auth_UserAccount" />
+            <End Role="Auth_UserInfoCore" EntitySet="Auth_UserInfoCore" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Auth_UserAccount">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="64" />
+          <Property Name="State" Type="int" Nullable="false" />
+          <Property Name="TimeMark" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="CreateTime" Type="datetime" />
+          <Property Name="LastLoginTime" Type="datetime" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="200" />
+          <Property Name="ApplicationID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Auth_UserInfoCore">
+          <Key>
+            <PropertyRef Name="UserInfoCoreID" />
+          </Key>
+          <Property Name="UserInfoCoreID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="RealName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Sender" Type="int" />
+          <Property Name="Age" Type="int" />
+          <Property Name="Address" Type="nvarchar" MaxLength="500" />
+          <Property Name="LastModifyTime" Type="datetime" />
+          <Property Name="NicName" Type="nvarchar" MaxLength="20" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="AvatarUrl" Type="nvarchar" MaxLength="100" />
+          <Property Name="Birthday" Type="datetime" />
+          <Property Name="Provinceid" Type="int" />
+          <Property Name="Cityid" Type="int" />
+          <Property Name="UserFrom" Type="int" />
+          <Property Name="describe" Type="nvarchar" MaxLength="1050" />
+          <Property Name="qq" Type="nvarchar" MaxLength="11" />
+          <Property Name="OpendValues" Type="nvarchar" MaxLength="500" />
+          <Property Name="UserPoint" Type="int" />
+          <Property Name="UserSpecialID" Type="nvarchar" MaxLength="30" />
+          <Property Name="QQKey" Type="nvarchar" MaxLength="128" />
+          <Property Name="WeiboKey" Type="nvarchar" MaxLength="128" />
+          <Property Name="QQAcessToken" Type="nvarchar" MaxLength="64" />
+          <Property Name="WeiboAcessToken" Type="nvarchar" MaxLength="64" />
+        </EntityType>
+        <Association Name="FK_Auth_UserInfoCore_Auth_UserAccount">
+          <End Role="Auth_UserAccount" Type="MyOLExamModel.Store.Auth_UserAccount" Multiplicity="0..1" />
+          <End Role="Auth_UserInfoCore" Type="MyOLExamModel.Store.Auth_UserInfoCore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auth_UserAccount">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Auth_UserInfoCore">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MyOLExamModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="UserManagerExamEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Auth_UserAccount" EntityType="MyOLExamModel.Auth_UserAccount" />
+          <EntitySet Name="Auth_UserInfoCore" EntityType="MyOLExamModel.Auth_UserInfoCore" />
+          <AssociationSet Name="FK_Auth_UserInfoCore_Auth_UserAccount" Association="MyOLExamModel.FK_Auth_UserInfoCore_Auth_UserAccount">
+            <End Role="Auth_UserAccount" EntitySet="Auth_UserAccount" />
+            <End Role="Auth_UserInfoCore" EntitySet="Auth_UserInfoCore" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Auth_UserAccount">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Type="Int32" Name="UserID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="State" Nullable="false" />
+          <Property Type="Binary" Name="TimeMark" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="DateTime" Name="CreateTime" />
+          <Property Type="DateTime" Name="LastLoginTime" />
+          <Property Type="String" Name="Comment" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ApplicationID" Nullable="false" />
+          <NavigationProperty Name="Auth_UserInfoCore" Relationship="MyOLExamModel.FK_Auth_UserInfoCore_Auth_UserAccount" FromRole="Auth_UserAccount" ToRole="Auth_UserInfoCore" />
+        </EntityType>
+        <EntityType Name="Auth_UserInfoCore">
+          <Key>
+            <PropertyRef Name="UserInfoCoreID" />
+          </Key>
+          <Property Type="Int32" Name="UserInfoCoreID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserID" />
+          <Property Type="String" Name="RealName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Sender" />
+          <Property Type="Int32" Name="Age" />
+          <Property Type="String" Name="Address" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="LastModifyTime" />
+          <Property Type="String" Name="NicName" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Email" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AvatarUrl" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Birthday" />
+          <Property Type="Int32" Name="Provinceid" />
+          <Property Type="Int32" Name="Cityid" />
+          <Property Type="Int32" Name="UserFrom" />
+          <Property Type="String" Name="describe" MaxLength="1050" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="qq" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="OpendValues" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="UserPoint" />
+          <Property Type="String" Name="UserSpecialID" MaxLength="30" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Auth_UserAccount" Relationship="MyOLExamModel.FK_Auth_UserInfoCore_Auth_UserAccount" FromRole="Auth_UserInfoCore" ToRole="Auth_UserAccount" />
+          <Property Type="String" Name="QQKey" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="WeiboKey" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="QQAcessToken" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="WeiboAcessToken" MaxLength="64" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Auth_UserInfoCore_Auth_UserAccount">
+          <End Type="MyOLExamModel.Auth_UserAccount" Role="Auth_UserAccount" Multiplicity="0..1" />
+          <End Type="MyOLExamModel.Auth_UserInfoCore" Role="Auth_UserInfoCore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auth_UserAccount">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Auth_UserInfoCore">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MyOLExamModelStoreContainer" CdmEntityContainer="UserManagerExamEntities">
+          <EntitySetMapping Name="Auth_UserAccount">
+            <EntityTypeMapping TypeName="MyOLExamModel.Auth_UserAccount">
+              <MappingFragment StoreEntitySet="Auth_UserAccount">
+                <ScalarProperty Name="ApplicationID" ColumnName="ApplicationID" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="LastLoginTime" ColumnName="LastLoginTime" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TimeMark" ColumnName="TimeMark" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Auth_UserInfoCore">
+            <EntityTypeMapping TypeName="MyOLExamModel.Auth_UserInfoCore">
+              <MappingFragment StoreEntitySet="Auth_UserInfoCore">
+                <ScalarProperty Name="WeiboAcessToken" ColumnName="WeiboAcessToken" />
+                <ScalarProperty Name="QQAcessToken" ColumnName="QQAcessToken" />
+                <ScalarProperty Name="WeiboKey" ColumnName="WeiboKey" />
+                <ScalarProperty Name="QQKey" ColumnName="QQKey" />
+                <ScalarProperty Name="UserSpecialID" ColumnName="UserSpecialID" />
+                <ScalarProperty Name="UserPoint" ColumnName="UserPoint" />
+                <ScalarProperty Name="OpendValues" ColumnName="OpendValues" />
+                <ScalarProperty Name="qq" ColumnName="qq" />
+                <ScalarProperty Name="describe" ColumnName="describe" />
+                <ScalarProperty Name="UserFrom" ColumnName="UserFrom" />
+                <ScalarProperty Name="Cityid" ColumnName="Cityid" />
+                <ScalarProperty Name="Provinceid" ColumnName="Provinceid" />
+                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+                <ScalarProperty Name="AvatarUrl" ColumnName="AvatarUrl" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="NicName" ColumnName="NicName" />
+                <ScalarProperty Name="LastModifyTime" ColumnName="LastModifyTime" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="Sender" ColumnName="Sender" />
+                <ScalarProperty Name="RealName" ColumnName="RealName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserInfoCoreID" ColumnName="UserInfoCoreID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="UserManager">
+        <EntityTypeShape EntityType="MyOLExamModel.Auth_UserAccount" Width="1.5" PointX="0.75" PointY="1" Height="2.9251310221354156" />
+        <EntityTypeShape EntityType="MyOLExamModel.Auth_UserInfoCore" Width="1.5" PointX="3.375" PointY="0.5" Height="4.8353279622395817" />
+        <AssociationConnector Association="MyOLExamModel.FK_Auth_UserInfoCore_Auth_UserAccount" >
+          <ConnectorPoint PointX="2.25" PointY="2.4625655110677083" />
+          <ConnectorPoint PointX="3.375" PointY="2.4625655110677083" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

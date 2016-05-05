@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "NoCatchException";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>主站不捕获的异常完整类名</legend>
+        <div class="editor-label" style="width: 500px; text-align: left">
+            <input type="text" id="txtword" style="width:300px;" maxlength="100" />
+            <input onclick="addword(this)" type="button" value="插入" /> <input type="button" value="查找" onclick="search()" /> 
+        </div>
+        <br />
+        <div class="editor-label">
+            列表
+        </div>
+        <div id="txtBadWords" class="editor-field" style="width:800px;">
+            @foreach (var item in BLL.BLLSystemConfig.NoCatchException.Split(';'))
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                <span style="display: inline-block; background-color: #E5F4FB; width: 350px; margin:5px 5px 0px 5px; cursor:pointer;" onclick="remove(this)" >
+                    @(item)
+                </span>
+                }
+            }
+            @if (BLL.BLLSystemConfig.NoCatchException.Length == 0)
+            { 
+                @:<i>现在没有类名</i> 
+            }
+        </div>
+        <br />
+    </fieldset>
+}
+<script type="text/javascript">
+    var redspan = null;
+    function search() {
+        if (redspan) redspan.css({ border: "0px solid red" });
+        redspan = null;
+        var t = $.trim($("#txtword").val());
+        $("span", "#txtBadWords").each(function () {
+            var v = $(this);
+
+            if ($.trim(v.text()).indexOf(t) > -1)
+                v.css({ border: "1px solid red" });
+
+            if ($.trim(v.text()) == t) {
+                v.css({ border: "3px solid red" });
+                redspan = v;
+            }
+        });
+        if (!redspan && arguments.length == 0)
+            alert('未找到');
+    }
+    function addword(obj) {
+        if ($("span", "#txtBadWords").length == 0)
+            $("#txtBadWords").html("");
+        search(1);
+        if (redspan) {
+            alert('已存在'); return;
+        }
+        var v = $.trim($("#txtword").val());
+        if (v.length == 0) return;
+        if (v.indexOf(';') > -1) {alert('不能有英文分号');  return; }
+        $.ajax({
+            type: "post",
+            url: "/sysconfig/NoCatchException?rd=" + Math.random(),
+            dataType: "json",
+            data: { word: v, actiontype: "add" },
+            error: function () { alert('服务器端错误'); },
+            success: function (html) {
+                v = "<span style='display: inline-block; background-color: #E5F4FB; width: 350px; margin:5px 5px 0px 5px; cursor:pointer;' onclick='remove(this)'>" + v + "</span>";
+                $("#txtBadWords").append(v);
+            }
+        });
+        //        var n = parseInt($("#txtword").val());
+        //        $("#txtword").val(++n);
+    }
+    function remove(obj) {
+        if (confirm('删除这个吗?')) {
+            $.post("/sysconfig/NoCatchException?rd=" + Math.random(), { word: $.trim($(obj).text()), actiontype: "delete" }, function () {
+                $(obj).css({ border: "1px solid red" });
+                $(obj).fadeOut(2000, function () {
+                    $(obj).remove();
+                });
+            });
+        }
+    }
+</script>
+

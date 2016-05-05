@@ -1,0 +1,159 @@
+﻿
+@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+@using BLL.Enums;
+@using UserManager.Framework.Model;
+@using UserManager.Framework;
+@model Auth_UserInfoCore
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="../../Scripts/My97DatePickerBeta/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+@using (Html.BeginForm())
+{
+    <fieldset >
+        <legend>@(ViewBag.IsEdit == true ? "编辑" : "添加")</legend>
+        		@Html.HiddenFor(model => model.UserInfoCoreID)
+                @Html.HiddenFor(model => model.UserID)
+		<div class="editor-label">
+			@Html.LabelFor(model => model.Birthday)
+		</div>
+		<div class="editor-field">
+            <input type="text" name="Birthday" id="Birthday" class = "Wdate"  onclick="WdatePicker()" value="@(Model.Birthday.HasValue ? Model.Birthday.Value.ToShortDateString() : "")" />
+		</div>
+		<br >
+        <div class="editor-label">
+			@Html.LabelFor(model => model.AvatarUrl)
+		</div>
+		<div class="editor-field">
+            @if (Model.AvatarUrl != null && Model.AvatarUrl.Length > 0)
+            { <img src="@Model.AvatarUrl" />}
+			@Html.EditorFor(model => model.AvatarUrl)
+		</div>
+		<br >
+
+		<div class="editor-label">
+			@Html.LabelFor(model => model.Provinceid)
+		</div>
+		<div class="editor-field">
+			@Html.DropDownListFor(m => m.Provinceid, new SelectList(BLL.StaticData.Dic_Province, "ProvinceId", "ProvinceName"));
+		</div>
+		<br >
+
+		<div class="editor-label">
+			@Html.LabelFor(model => model.describe)
+		</div>
+		<div class="editor-field">
+			@Html.TextAreaFor(model => model.describe, new { rows = 5 })
+			@Html.ValidationMessageFor(model => model.describe)
+		</div>
+		<br >
+
+		<div class="editor-label">
+			@Html.LabelFor(model => model.qq)
+		</div>
+		<div class="editor-field">
+			@Html.EditorFor(model => model.qq)
+			@Html.ValidationMessageFor(model => model.qq)
+		</div>
+		<br >
+
+		<div class="editor-label">
+			@Html.LabelFor(model => model.UserPoint)
+		</div>
+		<div class="editor-field">
+			@Html.EditorFor(model => model.UserPoint)
+			@Html.ValidationMessageFor(model => model.UserPoint)
+		</div>
+		<br >
+
+		<div class="editor-label">
+			@Html.LabelFor(model => model.UserSpecialID)
+		</div>
+		<div class="editor-field">
+            现有标志:
+            @{ var _dic = BLL.Enums.UserSpecialID.admin.ToDictionary();}
+            @foreach (var item in _dic)
+            {
+                @(item.Key + "," + item.Value+"  ")
+            }
+            <br />
+			@Html.EditorFor(model => model.UserSpecialID)
+			@Html.ValidationMessageFor(model => model.UserSpecialID)
+		</div>
+		<br >
+
+		<div class="editor-label">
+			@Html.LabelFor(model => model.Sender)
+		</div>
+		<div class="editor-field">
+			<select id="sender" name="sender"><option value="-1">--请选择--</option> <option value="1">男</option><option value="2">女</option></select> 
+		</div>
+		<br >
+
+		<div class="editor-label">
+			@Html.LabelFor(model => model.Age)
+		</div>
+		<div class="editor-field">
+			@Html.EditorFor(model => model.Age)
+			@Html.ValidationMessageFor(model => model.Age)
+		</div>
+		<br >
+
+		<div class="editor-label">
+			@Html.LabelFor(model => model.Address)
+		</div>
+		<div class="editor-field">
+			@Html.EditorFor(model => model.Address)
+			@Html.ValidationMessageFor(model => model.Address)
+		</div>
+		<br >
+
+		@*  selet example code
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ApplicationID)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.ApplicationID, new SelectList(ApplicationEnum.Admin.ToDictionary(), "key", "value"))
+            @Html.ValidationMessageFor(model => model.ApplicationID)
+        </div>*@
+
+        @Html.ValidationSummary(true)
+        <p>
+            <input type="submit" value="@(!ViewBag.IsEdit ? "Add" : "Save")" />
+            @*<input type="button" value="123" onclick="$('.l-dialog-waittingdialog,.l-window-mask,.l-dialog', window.parent.document).remove();" />*@
+        </p>
+    </fieldset>
+}
+
+<!--表单验证 -->
+<script>
+    jQuery.validator.addMethod("fnUserSpecialID", function (value, element) {
+            var chrnum = /^([1-9],)+$/; 
+            return this.optional(element) || (chrnum.test(value));
+        }, "只能是[数字,数字,]格式");
+    function ValidateForm() {
+    	//更多validate验证方法见 jquery.validate.MethodsExt.js
+        return $("form").validate({
+            rules: {
+                'Provinceid': { number: true },
+                'describe': { maxlength: 1050 },
+                'qq': { maxlength: 11 },
+                'UserPoint': { number: true, required: true },
+                'UserSpecialID': { maxlength: 30, fnUserSpecialID: true },
+                'Sender': { number: true },
+                'Age': { number: true },
+                'Address': { maxlength: 500 }
+            }
+        }).form();
+    }
+    document.forms[0].onsubmit = function () {
+        return ValidateForm();
+    }
+    var sender=@(!Model.Sender.HasValue?"-1":Model.Sender.Value.ToString());
+     $("document").ready(function () {
+            $("#sender").val(sender);
+     });
+</script>

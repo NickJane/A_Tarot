@@ -1,0 +1,67 @@
+﻿@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+@using BLL.Enums;
+@using Data.Framework.DataProvider;
+@using Data.Framework.Model;
+@{
+    ViewBag.Title = "BindFormationToTag";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+@model Data.Framework.Model.CardFormation
+           
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>绑定塔罗牌阵和主题</legend>
+        @Html.HiddenFor(x=>x.CardFormationID)
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FormationName)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.FormationName) 
+        </div>
+        <br>
+        @{ 
+    var TagLst = TagVisitor.GetInstance().GetListByParameters(new Data.Framework.Model.Tag { State = 1 });
+    var ral = TagVisitor.GetBaseDbContext().Ral_CardF_Tag.Where(x => x.CardFormationID == Model.CardFormationID).ToList();
+    }
+        <div id="div_Ral">
+        @foreach (var item in TagLst)
+        {
+                <div class="editor-label">
+                    <input type="checkbox" name="TagName" value="@item.TagID"
+                        @(ral.Where(x=>x.TagID==item.TagID).Count()==0?"":"checked")
+                     />
+                    @item.TagName
+                </div>
+                <div class="editor-field">
+                    @for (int i = 1; i <= 5; i++)
+			        {
+                        <input type="radio" name="@("rad" + item.TagID)" level="@i.ToString()" value="@i"
+                            @(ral.Where(x=>x.TagID==item.TagID && x.CecommendLevel==i).Count()==0?"":"checked")
+                         /><b>@i</b> 
+                        <text> 颗星 &nbsp;&nbsp;&nbsp;</text>
+			        }
+                </div>
+                <br />
+        }
+        </div>
+        <p>
+            <input type="submit" value="Save" />
+            
+        </p>
+    </fieldset>
+}
+<script type="text/javascript">
+    document.forms[0].onsubmit = function () {
+        var flag = true;
+        $(":checkbox:checked", "#div_Ral").each(function () {
+            if ($("input[name='rad" + this.value + "']:checked").length == 0) {
+                this.className = "error";
+                flag = false;
+            } else
+                this.className = "";
+        });
+        return flag;
+    }
+</script>

@@ -1,0 +1,124 @@
+﻿@using UserManager.Framework.Enums;
+@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+
+@{
+    ViewBag.Title = "UserList";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+    
+}
+<div id="body">
+    <div class="body_Head">
+        <div style="float: left; border: 0px solid red; padding-top: 3px;">
+            <a style="" href="/cms/newsform">添加</a>
+        </div>
+        <div style="float: right; border: 0px sold red">
+            &nbsp;&nbsp;类别:&nbsp;&nbsp;<select id="ddlposttype" name="ddlposttype"><option value="3">新闻</option><option value="4">推荐文章</option></select>
+            &nbsp;&nbsp;状态:&nbsp;&nbsp;@Html.DropDownList("State", new SelectList(BLL.Enums.Mpost_PostState.Normal.ToDictionary("--请选择--", "-1").ToList(), "key", "value"))
+            <input class="input_btn" onclick="Reload(1)" type="button" value=" 查询 " />
+            <script type="text/javascript">
+                $("#State").val('1');
+            </script>
+        </div>
+    </div>
+    <div style="clear: both">
+    </div>
+    <div class="body_Content">
+        <div class="l-loading" style="display: block" id="pageloading">
+        </div>
+
+        <div id="divDataTable" style="margin: 0; padding: 0">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var DataTable;
+    var ControllerName = "/CMS/";
+
+    $(function () {
+        ShowDataTable();
+    });
+    function ShowDataTable() {
+        DataTable = $("#divDataTable").ligerGrid({
+            checkbox: true,
+            columns: [
+                { display: '主键', name: '_idForString', align: 'left', width: 60 },
+                { display: '用户名', name: 'm_User.NicName', minWidth: 120 },
+                { display: '创建时间', name: 'PostTime', minWidth: 140 },
+                {
+                    display: '类型', isAllowHide: false, minWidth: 240,
+                    render: function (row) {
+                        if (row.PostType == 3) return "新闻";
+                        if (row.PostType == 4) return "推荐文章";
+                    }
+                },
+                { display: '描述', name: 'Title', minWidth: 300 },
+                {
+                    display: '操作', isAllowHide: false, minWidth: 240,
+                    render: function (row) {
+                        var html = '';
+                        html += '<a href="javascript:void(0)" onclick="Edit(\'' + row._idForString + '\', event)">编辑</a>&nbsp;&nbsp;&nbsp;';
+                        html += '<a href="javascript:void(0)" onclick="UpdateState(\'' + row._idForString + '\',' + "event" + ',\'state\',0)">删除</a>&nbsp;&nbsp;&nbsp;';
+                        return html;
+                    }
+                }
+                ], dataAction: 'server', pageSize: 20,
+            url: ControllerName + "GetNewsList", sortName: 'PostTime',
+            width: '100%'//, height: 320
+            , onAfterShowData: function () { }
+            , onBeforeShowData: function () { $("#pageloading").hide(); }
+            , parms: getPostDataForGrid()//提交到服务器端的参数
+        });
+    }
+    function getPostDataForGrid() {
+        /*约定.body_Head里的表单元素和本页提交的实体类属性名一样. */
+        var data = [];
+        $("input[type='text']", ".body_Head").each(function () {
+            data.push({ name: this.name, value: this.value });
+        });
+        $("select", ".body_Head").each(function () {
+            data.push({ name: this.name, value: this.value });
+        });
+        return data;
+        /*---------------------------*/
+    }
+</script>
+
+@*操作事件*@
+<script type="text/javascript">
+    function Reload() {
+        if (arguments.length == 1)
+            DataTable.changePage("first");
+        DataTable.setOptions({ parms: getPostDataForGrid() }); //重设参数
+        DataTable.loadData(false);
+
+        $('.l-window-mask,.l-dialog').remove();
+    }
+
+    function Edit(keyid, event) {
+        var e = event || window.event;
+
+        location.href = (ControllerName + 'NewsForm/' + keyid);
+    }
+    function UpdateState(keyid, event, field, value) {
+        var e = event || window.event;
+
+        if (confirm('确定删除吗?')) {
+            UpdateStateSend(keyid, field, value, "");
+        }
+    }
+    function UpdateStateSend(keyids, field, value, timeMark) {
+        $.get(ControllerName + "deleteNews?_rand=" + Math.random(), { id: keyids }, function (data) {
+            alert(data.State == 1 ? "OK" : "Error");
+            Reload();
+        })
+    }
+    function StopPropagation(e) {
+        if (e && e.stopPropagation)
+            e.stopPropagation();
+        else
+            window.event.cancelBubble = true;
+    }
+</script>
+
+

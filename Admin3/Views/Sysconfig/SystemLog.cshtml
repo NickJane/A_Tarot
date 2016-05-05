@@ -1,0 +1,91 @@
+﻿@using UserManager.Framework.Enums;
+@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+
+@{
+    ViewBag.Title = "SystemLog";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+
+<div id="body">
+    <div class="body_Head">
+        <div style="float: right; border: 0px sold red">
+            &nbsp;&nbsp;所属系统:&nbsp;&nbsp;@Html.DropDownList("ApplicationID", new SelectList(ApplicationEnum.Admin.ToDictionary().ToList(), "key", "value"))
+            &nbsp;&nbsp;类型:&nbsp;&nbsp;@Html.DropDownList("type", new SelectList(BLL.Enums.LogType.Error.ToDictionary("--请选择--", "-1").ToList(), "key", "value"))
+            &nbsp;&nbsp;内容:&nbsp;&nbsp;@Html.TextBox("content")
+            &nbsp;&nbsp;操作者:&nbsp;&nbsp;@Html.TextBox("username")
+            <input class="input_btn" onclick="Reload(1)" type="button" value=" 查询 " />
+        </div>
+
+    </div>
+    <div style="clear: both">
+    </div>
+    <div class="body_Content">
+        <div class="l-loading" style="display: block" id="pageloading">
+        </div>
+        <div class="divDatatableHeader">
+            
+        </div>
+        <div id="divDataTable" style="margin: 0; padding: 0">
+        </div>
+        <div class="divDatatableFooter">
+            
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var DataTable;
+    var ControllerName = "/sysconfig/";
+
+    $(function () {
+        ShowDataTable();
+    });
+    function ShowDataTable() {
+        DataTable = $("#divDataTable").ligerGrid({
+            checkbox: true,
+            columns: [
+//                            { display: '主键', name: 'Id', align: 'left', width: 60 },
+                {display: '用户名', name: 'UserName', minWidth: 80 },
+                {
+                    display: '地点', isAllowHide: false,minWidth: 250,
+                    render: function (row) { return "/" + row.ModuleName + "/" + row.PageName; }
+                },
+                { display: '描述', name: 'Comment', minWidth: 400 },
+                {
+                    display: '创建时间', minWidth: 140,name:"CreateTime",
+                    render: function (row) {
+                        var time = parseFloat(row.CreateTime.match(/(\d)+/g)[0]);
+                        time = new Date(time);
+                        return Tools.ConvertJsTimeToLongDate(time);
+
+                    }
+                },
+                { display: 'IP', name: 'ClientIP', minWidth: 80 }
+                ], dataAction: 'server', pageSize: 10,
+            url: ControllerName + "GetListByParameters", sortName: 'CreateTime', sortOrder: "desc",
+            width: '100%'//, height: 320
+            , onAfterShowData: function () { }
+            , onBeforeShowData: function () { $("#pageloading").hide(); }
+            , parms: getPostDataForGrid()//提交到服务器端的参数
+        });
+    }
+    function getPostDataForGrid() {
+        /*约定.body_Head里的表单元素和本页提交的实体类属性名一样. */
+        var data = [];
+        $("input[type='text']", ".body_Head").each(function () {
+            data.push({ name: this.name, value: this.value });
+        });
+        $("select", ".body_Head").each(function () {
+            data.push({ name: this.name, value: this.value });
+        });
+        return data;
+        /*---------------------------*/
+    }
+    function Reload() {
+        if (arguments.length == 1)
+            DataTable.changePage("first");
+        DataTable.setOptions({ parms: getPostDataForGrid() }); //重设参数
+        DataTable.loadData(false);
+    }
+</script>
+

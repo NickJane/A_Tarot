@@ -1,0 +1,55 @@
+﻿@model IList<int>
+@using Authorizations.Framework;
+@using Authorizations.Framework.Enums;
+@{
+    var res = AuthVisitor.GetAllResource(Model[0], "").ToList();
+    var roleres = AuthVisitor.GetResourceByRoleID(Model[1]);
+}
+<style type="text/css">
+    #div_resources td
+    {
+        border: 0px solid lightgreen; padding:5px 0 5px 0;
+        border-bottom:1px solid #ccc;
+        border-right:1px solid #ccc;
+    }
+    
+</style>
+<div id="div_resources">
+    <table style="border:1px solid #ccc" width="90%">
+        @{
+            var pages = res.Where(x => x.ResourceType == (int)ResourceEnum.Page).OrderBy(x => x.ResourceCode);
+            }
+
+        @foreach (var page in pages)
+        {
+            <tr>
+                <td style="width:120px;">
+                    @{ var secondlevel = res.Where(x => x.ResourceCode == page.ResourceCode.Substring(0, 6)).First();}
+                    @Html.CheckBox("roleRes", roleres.Contains(secondlevel.ResourceID), new { code = secondlevel.ResourceCode, value=secondlevel.ResourceID })
+                    @secondlevel.LanguageCode
+                    
+                </td>
+                <td style="width:120px;">
+                    @{  var ThirdLevelModuleCodes = res.Where(x => x.ResourceCode == page.ResourceCode.Substring(0, 9)).First();}
+                    @Html.CheckBox("roleRes", roleres.Contains(ThirdLevelModuleCodes.ResourceID),
+                                             new { code = ThirdLevelModuleCodes.ResourceCode, value = ThirdLevelModuleCodes.ResourceID })
+                    @ThirdLevelModuleCodes.LanguageCode
+                    
+                </td>
+                <td style="width:120px;">
+                    @Html.CheckBox("roleRes", roleres.Contains(page.ResourceID), new { code = page.ResourceCode, value = page.ResourceID })
+                    @page.LanguageCode
+                    
+                </td>
+                <td style="width:300px;">
+                    @{  var buttons = res.Where(x => x.ResourceCode.Contains(page.ResourceCode) && x.ResourceType==(int)ResourceEnum.Button);}
+                    @foreach (var button in buttons)
+                    {
+                        @Html.CheckBox("roleRes", roleres.Contains(button.ResourceID), new { code = button.ResourceCode, value = button.ResourceID })
+                        @button.LanguageCode
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

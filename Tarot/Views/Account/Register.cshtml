@@ -1,0 +1,115 @@
+﻿@model Tarot.Models.RegisterModel
+@{
+    ViewBag.Title = "注册";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<div>
+    <div style="float: left; width: 60%;">
+        <h2>
+            注册新用户</h2>
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true, "帐户创建不成功。请更正错误并重试。")
+            <div>
+                <fieldset>
+                    <div class="editor-label">
+                        @Html.LabelFor(m => m.UserName)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(m => m.UserName)
+                        @Html.ValidationMessageFor(m => m.UserName)
+                    </div>
+                    <br />
+
+                    <div class="editor-label">
+                        @Html.LabelFor(m => m.Password)
+                    </div>
+                    <div class="editor-field">
+                        @Html.PasswordFor(m => m.Password)
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                    <br />
+
+                    <div class="editor-label">
+                        @Html.LabelFor(m => m.ConfirmPassword)
+                    </div>
+                    <div class="editor-field">
+                        @Html.PasswordFor(m => m.ConfirmPassword)
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                    </div>
+                    <br />
+
+                    <div class="editor-label">
+                        @Html.LabelFor(m => m.Email)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(m => m.Email)
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
+
+                    <br />
+                    @*<div class="editor-label">
+                        @Html.LabelFor(m => m.NicName)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(m => m.NicName)
+                        @Html.ValidationMessageFor(m => m.NicName)
+                    </div>
+                    <br />*@
+                    <div class="editor-label">
+                        验证码
+                    </div>
+                    <div class="editor-field">
+                        <input type="text" name="imgcode" />
+                        <img title="点击更换图片" src="/shared/ValidateImage" onclick="javascript:this.src='/shared/ValidateImage?'+Math.random()" />
+                    </div>
+                    <p>
+                        <input type="submit" value="注册" />
+                        <a href="/account/QQLogin" style="margin-top:5px; border:0px;">
+                            <img style="margin-top:5px; border:0px;" alt="Connect_logo_4.png" src="http://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_3.png">
+                            </a>
+                        <a href="/account/logon" >已有账号, 这就去登陆</a><a href="/home/index" style="margin-left:20px;">回到首页</a>
+                    </p>
+                </fieldset>
+            </div>
+        }
+    </div>
+    <div style="float: right;  background-color: #F7F7F7;
+        display: table; height: 400px; border: 1px solid #E3EEF8 ; width:36%; ">
+        
+    </div>
+    <div style="clear: both">
+    </div>
+</div>
+<script>
+//    jQuery.validator.addMethod("checkusername", function (value, element) {
+//        var chrnum = /^([a-zA-Z0-9\u4e00-\u9fa5\-\_]+)$/; //^[\d\u4E00-\u9FA5]+$
+//        return this.optional(element) || (chrnum.test(value));
+//    }, "只能输入数字,字母,中文,-,_");
+    jQuery.validator.addMethod("checkusername", function (value, element) {
+        var chrnum = /^\S+$/; //^[\d\u4E00-\u9FA5]+$
+        return this.optional(element) || (chrnum.test(value));
+    }, "不能有空格等非法字符"); 
+    function ValidateForm() {
+    	//更多validate验证方法见 jquery.validate.MethodsExt.js
+        $("form").validate({
+            rules: {
+                'UserName': { required: true, maxlength: 20, minlength: 3, checkusername: true },
+                'Password': { required: true, maxlength: 16, minlength: 5 },
+                'ConfirmPassword': { required: true, minlength: 5, equalTo: "#Password" },
+                Email: { required: true, email: true },
+                //                    NicName:{maxlength: 16,minlength: 5}
+                'imgcode': { required: true }
+            },
+            messages: {
+                UserName: { required: 'UserName不能为空', maxlength: 'UserName长度不能超过20' },
+                Password: { required: 'Password不能为空', maxlength: 'Password长度不能超过16', minlength: '密码必须长于5位' },
+                'ConfirmPassword': { required: 'ConfirmPassword不能为空', minlength: '密码必须长于5位', equalTo: "两次密码不一样" },
+                email: "Please enter a valid email address"
+            }
+        });
+    }
+    $("document").ready(function () {
+        ValidateForm();
+    });
+</script>

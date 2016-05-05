@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="../../Content/Site1.css" rel="stylesheet" type="text/css" />
+    @*<link href="../../Content/skins/Aqua/css/ligerui-dialog.css" rel="stylesheet" type="text/css" />*@
+    <script src="../../Scripts/jquery-1.5.1.min.js" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="../../Scripts/jquery.tmpl.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/All_IN_ONE.js" type="text/javascript"></script>
+    <script src="../../Scripts/jquery.lazyload.min.js" type="text/javascript"></script>
+
+    <meta name="keywords" content="@ViewBag.keywords" />
+    <meta name="description" content="@ViewBag.description" />
+    <meta name="author" content="塔罗来了" />
+    <meta name="Copyright" content="塔罗来了版权所有" />
+    <meta property="qc:admins" content="4210001777641457411456375" />
+</head>
+<body>
+    <div class="page">
+        <div class="head">
+            <div class="logo">
+                <a href="/">塔罗来了</a>
+                
+                <i style="font-size: 12px;
+                    color: Red">预览版</i></div>
+                <div style="display:none"><span id="qqLoginBtn"></span></div>
+            @Html.Partial("_userstatepartial")
+        </div>
+        <div class="menu-bar clearfix">
+            @Html.Partial("_siteMenuPartial")
+            <div class="search">
+                <div id="cse-search-form" style="width: 250px;">
+                    Loading</div>
+                
+            </div>
+        </div>
+        <div class="content" style="border: 0px solid red; margin-top: 20px;">
+            @RenderBody()
+        </div>
+        <div style="clear: both"></div>
+        @{ Html.RenderPartial("_footpartial");}
+    </div>
+
+    <script type="text/javascript">        $("img").lazyload(); </script> 
+    <script src="http://www.google.com/jsapi" type="text/javascript"></script>
+                <script type="text/javascript">
+                    google.load('search', '1', { language: 'zh-CN' });
+                    google.setOnLoadCallback(function () {
+                        var customSearchControl = new google.search.CustomSearchControl('016222199086485784095:ynnkhml7jiw');
+
+                        customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
+                        var options = new google.search.DrawOptions();
+                        options.enableSearchboxOnly("http://www.google.com/cse?cx=016222199086485784095:ynnkhml7jiw", null, true);
+                        customSearchControl.draw('cse-search-form', options);
+                    }, true);
+                </script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+</body>
+</html>

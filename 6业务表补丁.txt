@@ -1,0 +1,8 @@
+ALTER TABLE [dbo].[TarotCard] ADD [IsGongTingPai] bit not null
+ALTER TABLE [dbo].[TarotCard] ADD  CONSTRAINT [DF_TarotCard_IsGongTingPai]  DEFAULT ((0)) FOR [IsGongTingPai]
+
+ALTER TABLE [dbo].[TarotCard] ADD [IsBigAkana] bit not null
+ALTER TABLE [dbo].[TarotCard] ADD  CONSTRAINT [DF_TarotCard_IsBigAkana]  DEFAULT ((0)) FOR IsBigAkana
+go
+alter table dbo.cardformation add PlaceHeight int not null default(0)
+alter table cardformation add PlaceWidth int not null default(0)

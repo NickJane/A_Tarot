@@ -1,0 +1,148 @@
+﻿@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+<div id="body">
+    <div class="body_Head">
+        <div style="float: left; border: 0px solid red; padding-top: 3px;">
+            @*<a onclick="OpenDialog('/TarotCard/form')" style="" href="javascript:void(0);">添加xxxxx</a>*@
+        </div>
+        <div style="float: right; border: 0px sold red">
+            @*&nbsp;&nbsp;所属系统:&nbsp;&nbsp;@Html.DropDownList("ApplicationID", new SelectList(ApplicationEnum.Admin.ToDictionary().ToList(), "key", "value"))*@
+            &nbsp;&nbsp;状态:&nbsp;&nbsp;@Html.DropDownList("State", new SelectList(BLL.Enums.State.Normal.ToDictionary("--请选择--", "-1").ToList(), "key", "value"))
+            &nbsp;&nbsp;塔罗牌名:&nbsp;&nbsp;@Html.TextBox("CardName")
+            <input class="input_btn" onclick="Reload(1)" type="button" value=" 查询 " />
+            <script type="text/javascript">
+                $("#State").val('1');
+            </script>
+        </div>
+
+    </div>
+    <div style="clear: both">
+    </div>
+    <div class="body_Content">
+        <div class="l-loading" style="display: block" id="pageloading">
+        </div>
+        <div class="divDatatableHeader">
+            @*<input class="input_btn" type="button" onclick="javascript:if(confirm('确定删除吗?')) AllDelete('state','0')" value="批量删除" />*@
+            @*<input class="input_btn" type="button" onclick="javascript:if(confirm('确定启用吗?')) AllDelete('state','1')"  value="批量启用" />
+            <input class="input_btn" type="button" onclick="javascript:if(confirm('确定停用吗?')) AllDelete('state','0')"  value="批量停用" />
+        *@</div>
+        <div id="divDataTable" style="margin: 0; padding: 0">
+        </div>
+        <div class="divDatatableFooter">
+            @*<input class="input_btn" type="button" onclick="javascript:if(confirm('确定删除吗?')) AllDelete('state','0')" value="批量删除" />*@
+            @*<input class="input_btn" type="button" onclick="javascript:if(confirm('确定启用吗?')) AllDelete('state','1')"  value="批量启用" />
+            <input class="input_btn" type="button" onclick="javascript:if(confirm('确定停用吗?')) AllDelete('state','0')"  value="批量停用" />
+       *@ 
+       </div>
+    </div>
+</div>
+
+
+ <!-- global var-->
+<script type="text/javascript">
+    var DataTable;
+    var ControllerName = "/TarotCard/";
+</script>
+<script type="text/javascript">
+    $(function () {
+        ShowDataTable();
+    });
+    function ShowDataTable() {
+        DataTable = $("#divDataTable").ligerGrid({
+            checkbox: true,
+            columns: [
+            	{ display: 'CardID', name: 'CardID', minWidth: 60 },
+				{ display: 'CardName', name: 'CardName', minWidth: 100 },
+				{ display: 'CardUrl', name: 'CardUrl', minWidth: 100 },
+				                {
+				                    display: '操作', isAllowHide: false,
+				                    render: function (row) {
+				                        var html = '<a href="javascript:void(0)" onclick="ShowDetail(' + row.CardID + ', event)">查看</a>&nbsp;&nbsp;&nbsp;';
+				                        html += '<a href="javascript:void(0)" onclick="Edit(' + row.CardID + ', event)">编辑</a>&nbsp;&nbsp;&nbsp;';
+				                        //html += '<a href="javascript:void(0)" onclick="UpdateState(' + row.CardID + ',' + "event" + ',\'state\',0)">删除</a>&nbsp;&nbsp;&nbsp;';
+				                        return html;
+				                    }
+				                }
+                ], dataAction: 'server', pageSize: 10,
+            url: ControllerName + "GetListByParameters", sortName: 'CardID',
+            width: '100%'//, height: 320
+            , onAfterShowData: function () { }
+            , onBeforeShowData: function () { $("#pageloading").hide(); }
+            , parms: getPostDataForGrid()//提交到服务器端的参数
+        });
+    }
+    function getPostDataForGrid() {
+        /*约定.body_Head里的表单元素和本页提交的实体类属性名一样. */
+        var data = [];
+        $("input[type='text']", ".body_Head").each(function () {
+            data.push({ name: this.name, value: this.value });
+        });
+        $("select", ".body_Head").each(function () {
+            data.push({ name: this.name, value: this.value });
+        });
+        return data;
+        /*---------------------------*/
+    }
+</script>
+
+@*操作事件*@
+<script type="text/javascript">
+    function OpenDialog(url) {
+        $.ligerDialog.open({ url: url + '?_rand=' + Math.random(), height: ($(document).height() - 100), width: 700,
+            buttons: [{ text: '取消', onclick: function (item, dialog) { dialog.close(); } }]
+        });
+    }
+    function AllDelete(field, value) {
+        var rows = DataTable.getCheckedRows();
+        var str = "";
+        var timeMark = "";
+        $(rows).each(function () {
+            str += this.CardID + ",";
+            if (this.TimeMark)
+                timeMark += this.TimeMark + "#";
+        });
+        UpdateStateSend(str, field, value, timeMark);
+    }
+    function UpdateStateSend(keyids, field, value, timeMark) {
+        $.get(ControllerName + "UpdateState?_rand=" + Math.random(), { keyids: keyids, field: field, value: value, timeMark: timeMark }, function (data) {
+            alert(data.Result == 1 ? "OK" : "Error");
+            Reload();
+        })
+    }
+    function Reload() {
+        if (arguments.length == 1)
+            DataTable.changePage("first");
+        DataTable.setOptions({ parms: getPostDataForGrid() }); //重设参数
+        
+        DataTable.loadData(false);
+
+        $('.l-window-mask,.l-dialog').remove();
+    }
+    function ShowDetail(keyid, event) {
+        var e = event || window.event;
+        StopPropagation(e)
+        OpenDialog(ControllerName + 'detail/' + keyid);
+    }
+    function Edit(keyid, event) {
+        var e = event || window.event;
+        StopPropagation(e);
+        OpenDialog(ControllerName + 'form/' + keyid);
+    }
+    function UpdateState(keyid, event, field, value) {
+        var e = event || window.event;
+        StopPropagation(e)
+        if (confirm('确定删除吗?')) {
+            UpdateStateSend(keyid, field, value, "");
+        }
+    }
+    function StopPropagation(e) {
+        if (e && e.stopPropagation)
+            e.stopPropagation();
+        else
+            window.event.cancelBubble = true;
+    }
+</script>

@@ -1,0 +1,84 @@
+﻿@model Data.MongoFramework.ModelMate.M_Post
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+    var tags = "";
+    foreach (var item in Model.CustomerTags)
+    {
+        tags += item.TagName + ",";
+    }
+    ViewBag.keywords = "塔罗来了, 塔罗牌, " + tags;
+    ViewBag.description = Model.Content.Length > 20 ? Model.Content.Substring(0, 20) : Model.Content;
+}
+@*父div为<div class="content" style="border: 0px solid red; margin-top: 20px;">*@
+@{ 
+    var width = (Model.CardFormationInfo.W + 170) > 600 ? 600 : (Model.CardFormationInfo.W + 190);
+    var right = 1024 - width - 430;
+    ViewBag.PostUserID = Model.m_User.UserID;
+}
+<style type="text/css">
+    #div_cf_content
+    {border: 0px solid #55A5D8;background-color: #E6EFF4;}
+    #div_cf_content #div_CardFormation
+    {display: inline-block;float: left;position: relative;}
+    #div_cf_content #div_CardDescribe
+    {display: inline-block;float: right; border-left: 0px solid #55A5D8;overflow-y: scroll;margin: 10px 10px 0px 0px;font-size: 11px;}
+    #div_cf_content .divTarotCard
+    {border: 1px solid #55A5D8;}
+</style>
+<div float="1" class="div1" style="float: left; width: @(width + "px"); border: 0px solid red;  overflow-y:scroll; ">
+    @{ Html.RenderPartial("_PostInfoSinglePartial");}
+    <div id="div_cf_content" class="editor-label" style="width: 100%;">
+        <div id="div_CardFormation" style="width:@(Model.CardFormationInfo.W + "px");height:@(Model.CardFormationInfo.H + "px");">
+            @foreach (var item in Model.CardFormationInfo.CardInfos)
+            {
+                <div style="width: 15px; position: absolute;font-size:10px;left:@((item.X - 15) + "px"); top: @(item.Y + "px");">
+                    @item.SortIndex,@item.CardName --
+                    @(item.IsHandstand ? "逆" : "正")
+                </div>
+                <div style="left: @((item.X) + "px"); top: @(item.Y + "px"); width: @(item.W + "px"); height: @(item.H + "px"); position: absolute;"
+                class="divTarotCard" index='${SortIndex}' describe='${Describe}'>
+                    <div style="position: relative;">
+                        <img style="width:98%" src="@Url.Content(item.ImgUrl)"></img>
+                    </div>
+                </div>
+            }
+        </div>
+        <div id="div_CardDescribe" style="width:100px; height:@(Model.CardFormationInfo.H + "px");">
+            @foreach (var item in Model.CardFormationInfo.CardInfos)
+            {
+                @item.SortIndex @:,&nbsp;&nbsp; @item.Describe<br />
+                        }
+        </div>
+        <div style="clear: both">
+        </div>
+    </div>
+</div>
+<div style="float: right; border: 0px solid red; width: 400px; margin-right:@(right + "px"); background-color:#E6EFF4; padding:10px;">
+    @{ 
+        if (Model.PostState == (int)BLL.Enums.Mpost_PostState.Normal)
+        {
+            Html.RenderPartial("_CommentPartial", Model._id.ToString());
+        }
+    }
+</div>
+<div style="clear: both">
+</div>
+<div id="text">
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        resetHeight()
+    });
+    window.onresize = resetHeight;
+
+    function resetHeight() {
+        var height = document.documentElement.clientHeight ? document.documentElement.clientHeight : 600;
+        height = height - $(".div1").first().offset().top - 30;
+        //$("#text").html(height);
+        if ($.browser.version != "6.0" && $.browser.version != "7.0") {
+            $(".div1").height(height);
+            
+        }
+    }
+</script>

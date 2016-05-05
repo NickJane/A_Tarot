@@ -1,0 +1,21 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>ForJs</title>
+    <script type="text/javascript">
+        var JS = decodeURI('@ViewBag.JS');
+        //alert(unescape( JS));
+        eval(unescape(JS));
+    </script>
+</head>
+<body>
+    <div>
+        
+    </div>
+</body>
+</html>

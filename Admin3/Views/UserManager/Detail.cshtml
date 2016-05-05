@@ -1,0 +1,54 @@
+﻿@model UserManager.Framework.Model.Auth_UserAccount
+@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+
+<fieldset>
+    <legend>详情</legend>
+
+    <div class="display-label">UserName</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.UserName)
+    </div>
+    <br />
+    <div class="display-label">Password</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Password)
+    </div>
+    <br />
+    
+    <div class="display-label">State</div>
+    <div class="display-field">
+        @(((UserManager.Framework.Enums.UserState)Model.State).ToLocalLanguage())
+    </div>
+    <br />
+    
+    <div class="display-label">CreateTime</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CreateTime)
+    </div>
+    <br />
+    
+    <div class="display-label">LastLoginTime</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LastLoginTime)
+    </div>
+    <br />
+    
+    <div class="display-label">Comment</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Comment)
+    </div>
+    <br />
+    
+    <div class="display-label">ApplicationID</div>
+    <div class="display-field">
+        @(((ApplicationEnum)Model.ApplicationID).ToLocalLanguage())
+    </div>
+</fieldset>
+<p>
+@Html.ActionLink("Edit", "form", new { id=Model.UserID }) 
+        </p>

@@ -1,0 +1,10 @@
+﻿@if(Request.IsAuthenticated) {
+    <text>欢迎 <strong>@User.Identity.Name</strong>!
+    [ @Html.ActionLink("注销", "LogOff", "Account") ]</text>
+}
+else {
+    <a href="/account/QQLogin" style="margin-top:5px; border:0px;">
+                            <img style="margin-top:5px; border:0px;" alt="Connect_logo_4.png" src="http://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_3.png">
+                            </a>
+    @:[ @Html.ActionLink("登录", "LogOn", "Account") ]
+}

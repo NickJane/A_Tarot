@@ -1,0 +1,139 @@
+﻿@{
+    ViewBag.Title = "_PostInfoSinglePartial";
+}
+@model Data.MongoFramework.ModelMate.M_Post
+<style type="text/css">
+    .div_postinfoSingle
+    {
+        @(Request.Url.AbsolutePath.ToLower().Contains("postdetail")?"background-color:#E6EFF4;":"")
+        padding:0px 10px 0px 10px; 
+        @(Request.Url.AbsolutePath.ToLower().Contains("postdetail")?"":"border-bottom: dotted 1px black;")
+        }
+    .div_postinfoSingle > div{ width:100%;}
+    .span_contentStart {font-size:16px;color:#515151; margin-right:10px;}
+    
+</style>
+<div class="div_postinfoSingle">
+
+    @if (BLL.UserInfo.CurrentUserResources.Contains("002001001001001"))
+    { 
+        <div class="editor-label">
+            @if (Model.PostState == 1)
+            {
+                <input type="button" value="锁定该贴" onclick="UpdatePost('@Model._id.ToString()','deletepost')" />
+            }
+            else if (Model.PostState == 0)
+            { 
+                <input type="button" value="恢复该贴" onclick="UpdatePost('@Model._id.ToString()','returnpost')" />
+            }
+        </div><br />
+        <script type="text/javascript">
+            function UpdatePost(id, action) {
+                $.get("/Posting/" + action + "?rd=" + Math.random(), { id: id, desc: '@Model.Title' }, function (json) {
+                    if (json.State == 1) {
+                        alert('操作成功');
+                    }
+                })
+            }
+        </script>
+    }
+    <span style="color:Red">@(Model.PostState==(int)BLL.Enums.Mpost_PostState.Lock?"该贴已被锁定!":"")</span> 
+    <div class="editor-label">
+       <span class="span_contentStart" >Title</span> 
+       <span style="font-size:18px;">
+           <a href="/posting/postdetail/@Model._id.ToString()">@Model.Title</a> 
+       </span> 
+    </div>
+    <br />
+    <div class="editor-label">
+        @*<span class="span_contentStart">Content</span> *@
+        @Html.Raw((Request.Url.AbsolutePath.ToLower().IndexOf("postdetail") == -1 && Model.Content.Length > 350) ? (Model.Content.Substring(0, 300)
+        + "<a href='/posting/postdetail/" + Model._id.ToString() + "'>详细</a>") : Model.Content)
+
+    </div>
+    <br />
+    <div class="editor-label">
+        <span class="span_contentStart">牌阵</span>
+        <span style="font-size:13px; font-weight:bolder"><a> @Model.CardFormationInfo.CardFormationName</a></span>
+        <span class="span_contentStart">Tags</span>
+        @foreach (var item in Model.CustomerTags)
+        {
+            string url = string.Format("http://www.google.com/cse?cx=016222199086485784095:ynnkhml7jiw&q={0}#gsc.tab=0&gsc.q={0}&gsc.page=1", HttpUtility.UrlEncode("tags " + item.TagName));
+                <a title="标签" href="@url" target="_blank">@item.TagName</a>
+        }
+    </div>
+    <br />
+    <div class="editor-label" style="color:Gray">
+        @{ var headimg = (!User.Identity.IsAuthenticated || string.IsNullOrEmpty(Model.m_User.AvatarURL)) ?
+               Url.Content("~/content/images/men_head.gif") : Model.m_User.AvatarURL; }
+        <div style="float:left">
+            <img original="@headimg" class="imgUserHead" style="width:25px;" />
+            <span class="span_UserSpecial" UserSpecialID="@Model.m_User.UserSpecialID"></span>
+            <span style="color:#55B2E4;width:100px;" title="@Model.m_User.NicName" class="divInLineBlock textoverflow">
+            @if (Model.m_User.UserID == -1)
+            {
+                    @Model.m_User.NicName
+            }
+            else
+            { 
+                    <a href="/usercenter/userinfo/@Model.m_User.UserID" target="_blank">@Model.m_User.NicName</a>
+            }
+            </span>
+            
+        </div>
+        <div style="float:right; margin-top:12px;">
+            <span style="font-size:11px;">@Model.PostTime</span> 
+            <span style="margin:0px 10px 0px 10px;">
+                <a href="javascript:void(0);" onclick="javascript:UpPost('@Model._id.ToString()',this);"> 
+                    <img src="@Url.Content("~/Content/Images/web09.gif")" title="mark" alt="mark" /> 
+                    (<span>@(Model.Mark)</span>)</a>
+            </span>
+            <span style="margin:0px 10px 0px 10px;"> @(Model.ReplyCount + "/" + Model.PopularityCount)</span>
+            @if (Request.Url.AbsolutePath.ToLower().Contains("postdetail"))
+            {
+                
+            }
+            else
+            {
+            <span style="margin:0px 10px 0px 10px;"> <a href="/posting/postdetail/@Model._id.ToString()">查看详情</a></span>
+            }
+        </div>
+        <div style="clear:both"></div>
+    </div>
+    @if (Request.Url.AbsolutePath.ToLower().Contains("postdetail"))
+    { 
+        var img = "http://" + Request.Url.Host + "/" + Model.CardFormationInfo.CardFormationUrl.Substring(Model.CardFormationInfo.CardFormationUrl.ToLower().IndexOf("content"));
+                <script type="text/javascript">
+                    var jiathis_config = {
+                        data_track_clickback:true,
+                        title:"@Model.Title #塔罗来了#",
+                        summary: '@(Model.Content.Length > 130 ? Model.Content.Substring(0, 120).Replace("'", "").Replace("&nbsp;","").Replace("<br>",".").Replace("<br/>",".") : 
+                        Model.Content.Replace("'", "").Replace("&nbsp;","").Replace("<br>",".").Replace("<br/>","."))',
+                         pic:"@img.Replace("\\", "/")"
+                     }
+                </script>
+                
+
+            <div id="ckepop">
+	            <span class="jiathis_txt">分享到：</span>
+	            <a class="jiathis_button_qzone"></a>
+	            <a class="jiathis_button_tsina"></a>
+	            <a class="jiathis_button_tqq"></a>
+	            <a class="jiathis_button_renren"></a>
+	            <a class="jiathis_button_kaixin001"></a>
+	            <a href="http://www.jiathis.com/share?uid=1566960" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	            <a class="jiathis_counter_style"></a>
+            </div>
+    }
+    <br />
+    <div class="editor-label">
+        
+    </div>
+</div>
+<script type="text/javascript">
+    function UpPost(id, obj) {
+        $.get("/Posting/AJAXUpPost?actiontype=mark&rd=" + Math.random(), { id: id }, function () { })
+        var span = $("span", obj.parentNode).first();
+        span.text(parseInt(span.text()) + 1);
+    }
+</script>

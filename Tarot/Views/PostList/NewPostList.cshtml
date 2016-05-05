@@ -1,0 +1,13 @@
+﻿@model IList<Data.MongoFramework.ModelMate.M_Post>
+@{
+    ViewBag.Title = "塔罗来了_塔罗牌在线占卜新帖列表";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+    ViewBag.keywords = "塔罗牌,塔罗牌社区, 塔罗牌在线占卜, 塔罗牌在线占卜";
+    ViewBag.description = "网友的塔罗牌社区, 塔罗牌在线占卜, 努力做最纯粹最欢乐的塔罗牌社区, 让塔罗牌指引你的人生";
+    
+    ViewBag.ActionName = "NewPostList";
+}
+<!--[if lt IE 7]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;'> <a href="http://windows.microsoft.com/zh-CN/internet-explorer/downloads/ie?ocid=ie6_countdown_bannercode"><img src="http://www.theie6countdown.cn/img/banner/upgrade.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." /></a></div> <![endif]--> 
+@Html.Partial("_forlist",Model)
+
+

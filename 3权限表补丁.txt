@@ -1,0 +1,5 @@
+alter table Auth_UserInfoCore add LastModifyTime datetime
+alter table Auth_UserInfoCore add NicName nvarchar(20)
+alter table Auth_UserInfoCore add Email nvarchar(50)
+go
+alter table [Tarot].[dbo].[Auth_UserInfoCore] add AvatarUrl nvarchar(100) 

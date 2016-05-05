@@ -1,0 +1,8 @@
+﻿向Auth_application表中添加系统数据
+
+添加超级管理员(默认执行) admin/123
+
+配置当前站点的用户模块以及权限模块所属系统
+<add key="UserApplication" value="1"/> 
+<add key="AuthApplication" value="1"/>
+

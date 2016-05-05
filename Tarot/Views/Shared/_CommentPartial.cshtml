@@ -1,0 +1,253 @@
+﻿@using Data.MongoFramework.ModelMate;
+@model string
+@{ 
+    var FKType = ViewBag.FKType == null ? 1 : ViewBag.FKType;
+    var width1 = ViewBag.width1 == null ? 350 : ViewBag.width1;//主回帖宽度
+    var width2 = width1 - 47;//内回帖宽度
+    var postUserid = ViewBag.PostUserID;
+   }
+<script id="sc_Comment" type="text/x-jquery-tmpl">
+        <li id='${_idForString}'>
+            <div style="float:left; width:47px;">
+                <img src="${m_User.AvatarURL}"  class="imgUserHead" alt="" title="" />
+            </div>
+            <div style="float:left; width:@(width1 + "px");word-wrap:break-word;">
+                <div style="color:#55B2E4;width:100px;display:inline" class="textoverflow">
+                    {{if m_User.UserID.toString()=='@postUserid' && @postUserid!=-1 }}<span style='color:orange'>[楼主]</span>{{/if}}
+                    <span class="span_UserSpecial" UserSpecialID="${m_User.UserSpecialID}"></span>
+                    <a href='/usercenter/userinfo/${m_User.UserID}' target='_blank'>${m_User.NicName}</a>
+                </div>
+                <br>
+                    {{if PostState==1}}{{html Content}}{{/if}}
+                    {{if PostState==0}}<s style='color:red'>已被管理员删除</s>{{/if}}
+                <br />
+                <span group='span_PostTime' style='font-size:11px; color:#808080; '>${PostTime}</span>
+                <a href="javascript:void(0);" onclick="javascript:ShowReply('${_idForString}', this)">回复</a>
+                <a group='DeleteComment'  style='display:none;' href="javascript:void(0);" onclick="javascript:DeleteComment('${_idForString}', this)">删除</a>
+                <span group='span_Li_Index' style='float:right;'>#${_Index}</span>
+            </div>
+            
+            <li id="ul_${_idForString}">
+                {{each Children}}
+                    <div style='width:@(width1 + "px"); float:right;'>
+                        <div style="float:left; width:47px;">
+                            <img src="${m_User.AvatarURL}" class='imgUserHead' alt="" title="" />
+                        </div>
+                        <div style="float:left; width:@(width2 + "px");word-wrap:break-word;">
+                            <div style="color:#55B2E4;width:100px;display:inline" class="textoverflow">
+                                {{if(m_User.UserID.toString()=='@postUserid' && @postUserid!=-1)}}<span style='color:orange'>[楼主]</span>{{/if}}
+                                <span class="span_UserSpecial" UserSpecialID="${m_User.UserSpecialID}"></span>
+                                <a href='/usercenter/userinfo/${m_User.UserID}' target='_blank'>${m_User.NicName}</a>
+                            </div>
+                            <br>
+                                {{if PostState==1}}{{html Content}}{{/if}}
+                                {{if PostState==0}}<s style='color:red'>已被管理员删除</s>{{/if}}
+                            <br />
+                            <span group='span_PostTime' style='font-size:11px;color:#808080; '>${PostTime}</span>
+                            <a group='DeleteComment' style='display:none;' href="javascript:void(0);" onclick="javascript:DeleteComment('${_idForString}', this,1)">删除</a>
+                        </div>
+                        <div style="clear:both"></div>
+                    <div>
+                {{/each}}
+            </li>
+            @*</ul>子回复占位区*@
+            <div style="clear:both"></div>
+        </li>
+        <li style='margin:-2px 0px 20px 0px;'>
+            <hr style="color:#CCE8F4;">
+        </li>
+</script>
+<script id="sc_Comment_Children" type="text/x-jquery-tmpl"> @*点击回复, 本地插入使用这个*@
+    <div style='width:@(width1 + "px"); float:right;'>
+                        <div style="float:left; width:47px;">
+                            <img src="${m_User.AvatarURL}"  class="imgUserHead" alt="" title="" />
+                        </div>
+                        <div style="float:left; width:@(width2 + "px");word-wrap:break-word;">
+                            <div style="color:#55B2E4;width:100px;display:inline" class="textoverflow">${m_User.NicName}</div>
+                            <br>
+                                {{html Content}}
+                            <br />
+                            <span group='span_PostTime' style='font-size:11px;color:#808080; '>${PostTime}</span>
+                        </div>
+                        <div style="clear:both"></div>
+                    <div>
+</script>
+
+@*加载*@
+<script type="text/javascript">
+    var pageindex = 1;
+        var pagesize = @(ViewBag.PageSize==null?10:ViewBag.PageSize);
+        $(document).ready(function () {
+            //InitComments();
+        });
+    
+    function pageselectCallback(_pageindex, jq) {
+        pageindex = _pageindex + 1;
+        InitComments();
+        
+    }
+</script>
+@*初始化*@
+<script type="text/javascript">
+    function InitComments() {
+        $.ajax({
+            type: "get", //用POST方式传输
+            dataType: "json", //数据格式:JSON
+            url: "/Posting/AJAXGetCommentsID/@Model" + "?rd=" + Math.random() + "&pageindex=" + pageindex + "&pagesize=" + pagesize, //目标地址
+            data: {},
+            beforeSend: function () {
+                $("#li_comment_state").remove();
+                $("#ul_Comment").append("<li id='li_comment_state' style=\"color:red\">正在加载......</li>");
+            }, //发送数据之前
+            complete: function () { }, //接收数据完毕
+            error: function () { $("#li_comment_state").html("加载错误, 我们会尽快处理") },
+            success: function (json) {
+                if (json.data.length == 0) {
+                    $("#li_comment_state").html("当前还没有任何人留言, 快来抢沙发吧");
+                    return;
+                }
+                $("#li_comment_state").remove();
+                $("#ul_Comment").html('');
+                $("#sc_Comment").tmpl(json.data).appendTo("#ul_Comment");
+
+
+                $("span[group='span_PostTime']", "#ul_Comment").each(function () {
+                    var time = parseFloat($(this).html().match(/(\d)+/g)[0]);
+                    time = new Date(time);
+                    $(this).html(Tools.ConvertJsTimeToLongDate(time))
+                });
+
+                $("#Pagination").pagination(json.count, {
+                    callback: pageselectCallback,
+                    prev_text: '上一页',
+                    next_text: '下一页',
+                    items_per_page: pagesize,
+                    num_display_entries: 6,
+                    current_page: pageindex - 1,
+                    num_edge_entries: 2
+                });
+                var s = document.body.scrollTop || document.documentElement.scrollTop;
+                if ((s - $("#ul_Comment").offset().top) < 0)
+                    $("div[float]").removeClass("div2");
+                
+                @if (BLL.UserInfo.CurrentUserResources.Contains("002001001001002")) { 
+                    @:$("a[group='DeleteComment']").show();
+                }
+
+                Tools.UserSpecialToSpan();
+            }
+        });
+    }
+</script>
+
+<ul id="ul_Comment">
+    
+</ul>
+<ul>
+    
+    <li>
+        <div id="Pagination" class="sabrosus" style="clear:both">
+        </div>
+    </li>
+</ul>
+@if (User.Identity.IsAuthenticated)
+{
+    //回复区的模板
+<ul id="ul_Reply">
+    <li group="li_Reply">
+        <div>
+            <textarea id="txtComment" style="font-size:12px; width:@(width2 + "px"); height:100px;" rows="4" onkeydown=""></textarea> 
+            <input type="button" value="发表" onclick="Sub('@Model','FatherID', this)" />
+        </div>
+    </li>
+</ul>
+}
+else { 
+    @:<a href="/Account/Register">注册</a>或者<a id="logintop" href="/Account/logon?returnurl=@Request.Url.AbsolutePath">登录</a>后才能回复.
+}
+@*发表*@
+<script type="text/javascript">
+    function Sub(Fkid, fatherid, input) {
+        var data = { 'FKid': Fkid, 'FKType': '@FKType', 'Content': $.trim($('#txtComment').val()), fatherid: (fatherid == "FatherID" ? "" : fatherid)
+            , 'CommentLevel': (fatherid == "FatherID" ? "1" : "2"), actionName: '@Request.Url.AbsolutePath.Split('/')[2]'
+        };
+        if ($.trim($('#txtComment').val()).length == 0) return;
+        if ($('#txtComment').val().length >= 500) {alert('评论不能长于500字');  return; }
+        $.ajax({
+            type: "POST", //用POST方式传输
+            dataType: "json", //数据格式:JSON
+            url: "/Posting/SaveComment?rd=" + Math.random(), //目标地址
+            data: data,
+            beforeSend: function () {
+                $("#div_comment_state").remove();
+                $(input.parentNode).append("<div id='div_comment_state' style=\"color:red\">正在发送......</div>");
+            }, //发送数据之前
+            complete: function () { }, //接收数据完毕
+            error: function () { $("#div_comment_state").html("非法字符或者发送错误, 我们会尽快处理") },
+            success: function (json) {
+                if (json.State == 2)
+                    $("#div_comment_state").html(json.ResponseText);
+                else {
+                    $("#div_comment_state").remove();
+
+                    var localdata = { _id: "",
+                        m_User: { 'AvatarURL': '@(BLL.UserInfo.UserAccount.AvatarURL)',
+                            'NicName': '@User.Identity.Name', 'UserID': -1
+                        }, 'Content': $('#txtComment').val(), "PostState": 1,
+                        PostTime: Tools.ConvertJsTimeToLongDate(new Date())
+                    };
+                    if (fatherid == "FatherID")//主回复 
+                        $("#sc_Comment").tmpl(localdata).appendTo("#ul_Comment");
+                    else {    //回复某个回帖
+                        $("#sc_Comment_Children").tmpl(localdata).appendTo("#ul_" + fatherid);
+                        $("li[group='li_Reply']", "#ul_" + fatherid).remove();
+                        $("a:contains('取消回复')", "#" + fatherid).remove();
+                    }
+                }
+
+                $('#txtComment').val('');
+            }
+
+        });
+    }
+</script>
+
+@*子回复*@
+<script type="text/javascript">
+    function ShowReply(fatherid, obj) {
+        @if(!User.Identity.IsAuthenticated){
+            @:alert('登录后才能回复');return;
+        }
+        if(!fatherid) return;
+        var fatherContainerID="#ul_"+fatherid;
+        if($("li[group='li_Reply']",fatherContainerID).length>0)return;
+        var htmls = $("#ul_Reply").html();
+        //替换回复模板的FatherID占位符
+        $(fatherContainerID).append(htmls.replace("FatherID",fatherid));
+
+        $("textarea",fatherContainerID)[0].focus();
+
+        $(obj).after("<a href='javascript:void(0);' onclick='removeLi_Reply(this,\""+fatherid+"\")'>取消回复</a>");//
+        //alert(Tools.unascii(remote_ip_info.province));
+    }
+    function removeLi_Reply(obj,fatherid){
+        $("li[group='li_Reply']","#ul_" + fatherid).remove();
+        $(obj).remove();
+    }
+</script>
+
+@*删除回复*@
+<script type="text/javascript">
+    function DeleteComment(id, obj, type) {
+        if (!confirm('确定删除吗?暂时系统还不支持恢复评论. 请慎重'))
+            return;
+        $.get("/posting/DeleteComment?rd=" + Math.random(), { id: id, type: (type ? 1 : 0) }, function (json) {
+            if (json.State == 1)
+                alert('操作成功');
+        });
+    }
+</script>
+@Html.Partial("_smilefacepartial")
+<script type="text/javascript">
+    InitComments();
+</script>

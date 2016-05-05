@@ -1,0 +1,67 @@
+﻿
+@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+@using BLL.Enums;
+@model Authorizations.Framework.Model.Auth_Role
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+
+
+    <fieldset >
+        <legend>详情</legend>
+        		<div class="display-label">
+			@Html.LabelFor(model => model.RoleID)
+		</div>
+		<div class="display-field">
+			@Html.LabelFor(model => model.RoleID)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.LanguagueCode)
+		</div>
+		<div class="display-field">
+			@Html.LabelFor(model => model.LanguagueCode)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.State)
+		</div>
+		<div class="display-field">
+			@Html.LabelFor(model => model.State)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.IsSuperRole)
+		</div>
+		<div class="display-field">
+			@Html.LabelFor(model => model.IsSuperRole)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.ApplicationID)
+		</div>
+		<div class="display-field">
+			@Html.LabelFor(model => model.ApplicationID)
+		</div>
+		<br >
+
+		
+		@*  selet example code
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ApplicationID)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.ApplicationID, new SelectList(ApplicationEnum.Admin.ToDictionary(), "key", "value"))
+        </div>*@
+
+    </fieldset>
+<p>
+@Html.ActionLink("Edit", "form", new { id=Model.RoleID }) 
+        </p>

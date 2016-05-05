@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "RedirectPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var urls = string.IsNullOrEmpty(Request.QueryString["urls"]) ? new string[] { } : Request.QueryString["urls"].Split(';');
+    }
+<script type="text/javascript">
+    var url = '@(urls.Length == 0 ? "/home/index" : urls[0].Split('|')[0])';
+    var i = 4;
+    var run = function () {
+        $("#second").html(i);
+        i--;
+        if (i == 0) {
+            location.href = url;
+        }
+    }
+    $(document).ready(function () {
+        window.setInterval("run()", 1000);
+    })
+</script>
+<style>
+    .link{ font-size:14px; font-weight:bolder; display:block; width:100%; margin-top:5px;}
+</style>
+<div style="text-align:center">
+        <div style="display:block; width:400px;  border:1px solid #B4CCDD;margin:0px auto; text-align:center;">
+            <h4>操作成功, <span id="second">5</span>秒后将自动跳转, 或者您可以自行点击</h4>
+            @if (urls.Length == 0)
+            { 
+                <a href="/home/index" class="link" >首页</a>
+            }
+            else {
+                foreach (var obj in urls)
+                {
+                    var temps = obj.Split('|');
+                    <a href="@temps[0]" class="link"> @HttpUtility.UrlDecode( temps[1])</a>
+                }
+            }
+                
+        </div>
+</div>
+

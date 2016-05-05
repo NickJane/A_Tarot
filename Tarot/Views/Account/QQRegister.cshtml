@@ -1,0 +1,162 @@
+﻿@model Tarot.Models.QQWeiboRegisterModel
+@{
+    ViewBag.Title = "注册";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<style>
+    #div_title span
+    {
+        cursor: pointer;
+    }
+    .currentSpan
+    {
+        padding: 10px 10px 0px 10px;
+        font-size: 18px;
+        font-weight: bold;
+        border: 1px solid black;
+        border-bottom-width: 0px;
+    }
+</style>
+<div>
+    <div style="float: left; width: 60%;">
+        来自QQ登录的 <img src="@ViewBag.QZoneAvator" /> @Model.UserName , 欢迎你<br><br><br>
+        <div id="div_title">
+            <span class="currentSpan" target="div_login">注册新用户</span> <span class="" target="div_banding">
+                绑定旧账号</span>
+        </div>
+        @Html.ValidationSummary(true, "帐户创建不成功。请更正错误并重试。")
+        <form action="/Account/qqRegister" id="form1" method="post">
+            
+            <div tab id="div_login">
+            <fieldset>
+                <div class="editor-label">
+                    <label for="UserName">
+                        用户名</label>
+                </div>
+                <div class="editor-field">
+                    <input id="UserName" name="UserName" type="text" value="@Model.UserName" />
+                </div>
+                <br />
+                <div class="editor-label">
+                    <label for="Password">
+                        密码</label>
+                </div>
+                <div class="editor-field">
+                    <input id="Password" name="Password" type="password" />
+                </div>
+                <br />
+                <div class="editor-label">
+                    <label for="Email">
+                        电子邮件地址</label>
+                </div>
+                <div class="editor-field">
+                    <input id="Email" name="Email" type="text" value="@Model.Email" />
+                </div>
+                <p>
+                    <input id="tab1" type="button" onclick="register(this)" value="注册" />
+                </p>
+                <input type="hidden" name="hiddentab" id="hiddentab" value="1" />
+            </fieldset>
+        </div>
+        </form>
+        <form action="/Account/qqRegister" id="form2" method="post">
+            <div tab id="div_banding" style="display: none">
+            <fieldset>
+                <div class="editor-label">
+                    <label for="UserName">
+                        用户名</label>
+                </div>
+                <div class="editor-field">
+                    <input id="BandingUserName" name="BandingUserName" type="text" value="" />
+                </div>
+                <br />
+                <div class="editor-label">
+                    <label for="Password">
+                        密码</label>
+                </div>
+                <div class="editor-field">
+                    <input id="BandingPassword" name="BandingPassword" type="password" />
+                </div>
+                <p>
+                    <input id="tab2" type="button" onclick="register(this)" value="绑定" />
+                </p>
+                <input type="hidden" name="hiddentab" id="hiddentab" value="2" />
+            </fieldset>
+        </div>
+        </form>
+        
+    </div>
+    <div style="float: right; background-color: #F7F7F7; display: table; height: 400px;
+        border: 1px solid #E3EEF8; width: 36%;">
+    </div>
+    <div style="clear: both">
+    </div>
+</div>
+<script>
+    //    jQuery.validator.addMethod("checkusername", function (value, element) {
+    //        var chrnum = /^([a-zA-Z0-9\u4e00-\u9fa5\-\_]+)$/; //^[\d\u4E00-\u9FA5]+$
+    //        return this.optional(element) || (chrnum.test(value));
+    //    }, "只能输入数字,字母,中文,-,_");
+    jQuery.validator.addMethod("checkusername", function (value, element) {
+        var chrnum = /^\S+$/; //^[\d\u4E00-\u9FA5]+$
+        return this.optional(element) || (chrnum.test(value));
+    }, "不能有空格等非法字符");
+    function ValidateForm1() {
+        //更多validate验证方法见 jquery.validate.MethodsExt.js
+        return $("#form1").validate({
+            rules: {
+                'UserName': { required: true, maxlength: 20, minlength: 3, checkusername: true },
+                'Password': { required: true, maxlength: 16, minlength: 5 },
+                Email: { required: true, email: true }
+            },
+            messages: {
+                UserName: { required: 'UserName不能为空', maxlength: 'UserName长度不能超过20' },
+                Password: { required: 'Password不能为空', maxlength: 'Password长度不能超过16', minlength: '密码必须长于5位' },
+                email: "Please enter a valid email address"
+            }
+        }).form();
+    }
+    function ValidateForm2() {
+        //更多validate验证方法见 jquery.validate.MethodsExt.js
+        return $("#form2").validate({
+            rules: {
+                'BandingUserName': { required: true, maxlength: 20, minlength: 3, checkusername: true },
+                'BandingPassword': { required: true, maxlength: 16, minlength: 5 }
+            },
+            messages: {
+                UserName: { required: 'UserName不能为空', maxlength: 'UserName长度不能超过20' },
+                Password: { required: 'Password不能为空', maxlength: 'Password长度不能超过16', minlength: '密码必须长于5位' }
+            }
+        }).form();
+    }
+
+    function register(obj) {
+        if (obj.id == "tab1") {
+            if (ValidateForm1()) {
+                document.forms[0].submit();
+            }
+        } else {
+            if (ValidateForm2()) {
+            document.forms[1].submit();
+        }
+        }
+    }
+
+    $("document").ready(function () {
+        $("#div_title>span").click(function () {
+            $(".currentSpan").each(function () { this.className = ""; });
+            $("div[tab]").hide();
+            this.className = "currentSpan";
+            $("#" + this.getAttribute('target')).show();
+        });
+        $(".currentSpan").each(function () { this.className = ""; });
+        $("div[tab]").hide();
+        if ('@ViewBag.currentSpan' == '1' || '@ViewBag.currentSpan'=='') {
+            $("span[target='div_login']").addClass("currentSpan");
+            $("#div_login").show();
+        }else{
+            $("span[target='div_banding']").addClass("currentSpan");
+            $("#div_banding").show();
+        }
+    });
+</script>

@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "发表普通帖子";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+    
+    ViewBag.keywords = "塔罗来了, 发表普通帖子,";
+    ViewBag.description = "塔罗来了, 发表普通帖子,";
+}
+@using Lib.ClassExt;
+@using BLL.Enums;
+@using Data.Framework.DataProvider;
+@using Data.Framework.Model;
+@using Data.MongoFramework.ModelMate;
+@model M_Post
+@if (!User.Identity.IsAuthenticated)
+{
+    <h3 
+       @if (ViewData["AnonymityError"] != null)
+       {
+            @:style='color:red';
+       }
+    >
+        未注册用户每天只能发三贴.</h3>
+}
+
+@Html.ValidationSummary()
+@using (Html.BeginForm("posting2", "posting", FormMethod.Post, new { id = "form1" }))
+{
+@*父div为<div class="content" style="border: 0px solid red; margin-top: 20px;">*@
+    <div style="float: left; width: 700px; border: 0px solid red;">
+        <div>
+            <div class="editor-label">
+                主题
+            </div>
+            <div class="editor-field">
+                @*<input type="text" name="Title" autocomplete="off" />*@ <a name="miaodian_title">
+                
+                </a>
+                @Html.EditorFor(model => model.Title) @Html.ValidationMessageFor(model => model.Title)
+            </div>
+            <br />
+            <div class="editor-label">
+                内容
+            </div>
+            <div class="editor-field">
+                @Html.TextAreaFor(model => model.Content, new { style="width: 400px;height: 200px;", 
+                                onkeydown = "javascript:$('#span_maxLength').html(this.value.length)" }) @Html.ValidationMessageFor(model => model.Content)
+            </div>
+            <br />
+            <div class="editor-label">
+                
+            </div>
+            <div class="editor-field">
+                长度限制为<span id="span_maxLength" maxlength="1000">0</span>/ 1000字
+            </div>
+            <br />
+            <p>
+                <input type="submit" id="submit" value=" 提交 " />
+            </p>
+        </div>
+    </div>
+
+    @Html.Partial("_LayoutSiteContentRightPart")
+
+    <div style="clear: both">
+    </div>
+    @Html.Partial("_smilefacepartial")
+}
+<script type="text/javascript">
+    //    jQuery.validator.addMethod("check", function (value, element) {
+    //        var chrnum = /^([a-zA-Z0-9\u4e00-\u9fa5]+)$/; //^[\d\u4E00-\u9FA5]+$
+    //        return this.optional(element) || (chrnum.test(value));
+    //    }, "只能输入数字,字母,中文"); 
+    function ValidateForm() {
+        //更多validate验证方法见 jquery.validate.MethodsExt.js
+        return $("#form1").validate({
+            rules: {
+                'Content': { required: true, minlength: 5, maxlength: 2000 },
+                'Title': { required: true, minlength: 3, maxlength: 70 }
+            },
+            messages: {
+                UserName: { required: '描述不能为空', minlength: '描述不能少于5个字' },
+                Title: { required: 'Title不能为空', minlength: '密码必须长于3位' }
+            }
+        }).form();
+    }
+    document.forms['form1'].onsubmit = function () {
+        var flag = ValidateForm();
+        if (flag) {
+            $("#submit").attr('disabled', "disabled");
+        } else
+            $("#submit").removeAttr('disabled');
+        return flag;
+    }
+</script>

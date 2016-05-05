@@ -1,0 +1,355 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="MyOLExamModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="MyOLExamModelStoreContainer">
+          <EntitySet Name="Auth_Resource" EntityType="MyOLExamModel.Store.Auth_Resource" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Auth_Role" EntityType="MyOLExamModel.Store.Auth_Role" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Auth_RoleResource" EntityType="MyOLExamModel.Store.Auth_RoleResource" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Auth_UserResource" EntityType="MyOLExamModel.Store.Auth_UserResource" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Auth_UserRole" EntityType="MyOLExamModel.Store.Auth_UserRole" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Auth_RoleResource_Auth_Resource" Association="MyOLExamModel.Store.FK_Auth_RoleResource_Auth_Resource">
+            <End Role="Auth_Resource" EntitySet="Auth_Resource" />
+            <End Role="Auth_RoleResource" EntitySet="Auth_RoleResource" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Auth_RoleResource_Auth_Role" Association="MyOLExamModel.Store.FK_Auth_RoleResource_Auth_Role">
+            <End Role="Auth_Role" EntitySet="Auth_Role" />
+            <End Role="Auth_RoleResource" EntitySet="Auth_RoleResource" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Auth_UserResource_Auth_Resource" Association="MyOLExamModel.Store.FK_Auth_UserResource_Auth_Resource">
+            <End Role="Auth_Resource" EntitySet="Auth_Resource" />
+            <End Role="Auth_UserResource" EntitySet="Auth_UserResource" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Auth_UserRole_Auth_Role" Association="MyOLExamModel.Store.FK_Auth_UserRole_Auth_Role">
+            <End Role="Auth_Role" EntitySet="Auth_Role" />
+            <End Role="Auth_UserRole" EntitySet="Auth_UserRole" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Auth_Resource">
+          <Key>
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="ResourceID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ResourceCode" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="State" Type="int" Nullable="false" />
+          <Property Name="ResourceUrl" Type="nvarchar" MaxLength="50" />
+          <Property Name="ResourceType" Type="int" Nullable="false" />
+          <Property Name="LanguageCode" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="OrderIndex" Type="int" />
+        </EntityType>
+        <EntityType Name="Auth_Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="LanguagueCode" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="State" Type="int" Nullable="false" />
+          <Property Name="IsSuperRole" Type="bit" Nullable="false" />
+          <Property Name="ApplicationID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Auth_RoleResource">
+          <Key>
+            <PropertyRef Name="RoleID" />
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="RoleResourceID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RoleID" Type="int" Nullable="false" />
+          <Property Name="ResourceID" Type="int" Nullable="false" />
+          <Property Name="TimeMark" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="Auth_UserResource">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="UserRerouceID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="ResourceID" Type="int" Nullable="false" />
+          <Property Name="TimeMark" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="Auth_UserRole">
+          <Key>
+            <PropertyRef Name="UserRoleID" />
+          </Key>
+          <Property Name="UserRoleID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="RoleID" Type="int" Nullable="false" />
+          <Property Name="TimeMark" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <Association Name="FK_Auth_RoleResource_Auth_Resource">
+          <End Role="Auth_Resource" Type="MyOLExamModel.Store.Auth_Resource" Multiplicity="1" />
+          <End Role="Auth_RoleResource" Type="MyOLExamModel.Store.Auth_RoleResource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auth_Resource">
+              <PropertyRef Name="ResourceID" />
+            </Principal>
+            <Dependent Role="Auth_RoleResource">
+              <PropertyRef Name="ResourceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Auth_RoleResource_Auth_Role">
+          <End Role="Auth_Role" Type="MyOLExamModel.Store.Auth_Role" Multiplicity="1" />
+          <End Role="Auth_RoleResource" Type="MyOLExamModel.Store.Auth_RoleResource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auth_Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="Auth_RoleResource">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Auth_UserResource_Auth_Resource">
+          <End Role="Auth_Resource" Type="MyOLExamModel.Store.Auth_Resource" Multiplicity="1" />
+          <End Role="Auth_UserResource" Type="MyOLExamModel.Store.Auth_UserResource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auth_Resource">
+              <PropertyRef Name="ResourceID" />
+            </Principal>
+            <Dependent Role="Auth_UserResource">
+              <PropertyRef Name="UserRerouceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Auth_UserRole_Auth_Role">
+          <End Role="Auth_Role" Type="MyOLExamModel.Store.Auth_Role" Multiplicity="1" />
+          <End Role="Auth_UserRole" Type="MyOLExamModel.Store.Auth_UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auth_Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="Auth_UserRole">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MyOLExamModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="AuthEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Auth_Resource" EntityType="MyOLExamModel.Auth_Resource" />
+          <EntitySet Name="Auth_Role" EntityType="MyOLExamModel.Auth_Role" />
+          <EntitySet Name="Auth_RoleResource" EntityType="MyOLExamModel.Auth_RoleResource" />
+          <EntitySet Name="Auth_UserResource" EntityType="MyOLExamModel.Auth_UserResource" />
+          <EntitySet Name="Auth_UserRole" EntityType="MyOLExamModel.Auth_UserRole" />
+          <AssociationSet Name="FK_Auth_RoleResource_Auth_Resource" Association="MyOLExamModel.FK_Auth_RoleResource_Auth_Resource">
+            <End Role="Auth_Resource" EntitySet="Auth_Resource" />
+            <End Role="Auth_RoleResource" EntitySet="Auth_RoleResource" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Auth_UserResource_Auth_Resource" Association="MyOLExamModel.FK_Auth_UserResource_Auth_Resource">
+            <End Role="Auth_Resource" EntitySet="Auth_Resource" />
+            <End Role="Auth_UserResource" EntitySet="Auth_UserResource" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Auth_RoleResource_Auth_Role" Association="MyOLExamModel.FK_Auth_RoleResource_Auth_Role">
+            <End Role="Auth_Role" EntitySet="Auth_Role" />
+            <End Role="Auth_RoleResource" EntitySet="Auth_RoleResource" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Auth_UserRole_Auth_Role" Association="MyOLExamModel.FK_Auth_UserRole_Auth_Role">
+            <End Role="Auth_Role" EntitySet="Auth_Role" />
+            <End Role="Auth_UserRole" EntitySet="Auth_UserRole" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Auth_Resource">
+          <Key>
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="ResourceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ResourceCode" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="State" Type="Int32" Nullable="false" />
+          <Property Name="ResourceUrl" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="ResourceType" Type="Int32" Nullable="false" />
+          <Property Name="LanguageCode" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="OrderIndex" Type="Int32" />
+          <NavigationProperty Name="Auth_RoleResource" Relationship="MyOLExamModel.FK_Auth_RoleResource_Auth_Resource" FromRole="Auth_Resource" ToRole="Auth_RoleResource" />
+          <NavigationProperty Name="Auth_UserResource" Relationship="MyOLExamModel.FK_Auth_UserResource_Auth_Resource" FromRole="Auth_Resource" ToRole="Auth_UserResource" />
+        </EntityType>
+        <EntityType Name="Auth_Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LanguagueCode" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="State" Type="Int32" Nullable="false" />
+          <Property Name="IsSuperRole" Type="Boolean" Nullable="false" />
+          <Property Name="ApplicationID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Auth_RoleResource" Relationship="MyOLExamModel.FK_Auth_RoleResource_Auth_Role" FromRole="Auth_Role" ToRole="Auth_RoleResource" />
+          <NavigationProperty Name="Auth_UserRole" Relationship="MyOLExamModel.FK_Auth_UserRole_Auth_Role" FromRole="Auth_Role" ToRole="Auth_UserRole" />
+        </EntityType>
+        <EntityType Name="Auth_RoleResource">
+          <Key>
+            <PropertyRef Name="RoleID" />
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="RoleResourceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleID" Type="Int32" Nullable="false" />
+          <Property Name="ResourceID" Type="Int32" Nullable="false" />
+          <Property Name="TimeMark" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Auth_Resource" Relationship="MyOLExamModel.FK_Auth_RoleResource_Auth_Resource" FromRole="Auth_RoleResource" ToRole="Auth_Resource" />
+          <NavigationProperty Name="Auth_Role" Relationship="MyOLExamModel.FK_Auth_RoleResource_Auth_Role" FromRole="Auth_RoleResource" ToRole="Auth_Role" />
+        </EntityType>
+        <EntityType Name="Auth_UserResource">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="ResourceID" />
+          </Key>
+          <Property Name="UserRerouceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="ResourceID" Type="Int32" Nullable="false" />
+          <Property Name="TimeMark" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Auth_Resource" Relationship="MyOLExamModel.FK_Auth_UserResource_Auth_Resource" FromRole="Auth_UserResource" ToRole="Auth_Resource" />
+        </EntityType>
+        <EntityType Name="Auth_UserRole">
+          <Key>
+            <PropertyRef Name="UserRoleID" />
+          </Key>
+          <Property Name="UserRoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="RoleID" Type="Int32" Nullable="false" />
+          <Property Name="TimeMark" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Auth_Role" Relationship="MyOLExamModel.FK_Auth_UserRole_Auth_Role" FromRole="Auth_UserRole" ToRole="Auth_Role" />
+        </EntityType>
+        <Association Name="FK_Auth_RoleResource_Auth_Resource">
+          <End Role="Auth_Resource" Type="MyOLExamModel.Auth_Resource" Multiplicity="1" />
+          <End Role="Auth_RoleResource" Type="MyOLExamModel.Auth_RoleResource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auth_Resource">
+              <PropertyRef Name="ResourceID" />
+            </Principal>
+            <Dependent Role="Auth_RoleResource">
+              <PropertyRef Name="ResourceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Auth_UserResource_Auth_Resource">
+          <End Role="Auth_Resource" Type="MyOLExamModel.Auth_Resource" Multiplicity="1" />
+          <End Role="Auth_UserResource" Type="MyOLExamModel.Auth_UserResource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auth_Resource">
+              <PropertyRef Name="ResourceID" />
+            </Principal>
+            <Dependent Role="Auth_UserResource">
+              <PropertyRef Name="UserRerouceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Auth_RoleResource_Auth_Role">
+          <End Role="Auth_Role" Type="MyOLExamModel.Auth_Role" Multiplicity="1" />
+          <End Role="Auth_RoleResource" Type="MyOLExamModel.Auth_RoleResource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auth_Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="Auth_RoleResource">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Auth_UserRole_Auth_Role">
+          <End Role="Auth_Role" Type="MyOLExamModel.Auth_Role" Multiplicity="1" />
+          <End Role="Auth_UserRole" Type="MyOLExamModel.Auth_UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auth_Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="Auth_UserRole">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MyOLExamModelStoreContainer" CdmEntityContainer="AuthEntities">
+          <EntitySetMapping Name="Auth_Resource"><EntityTypeMapping TypeName="MyOLExamModel.Auth_Resource"><MappingFragment StoreEntitySet="Auth_Resource">
+            <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+            <ScalarProperty Name="ResourceCode" ColumnName="ResourceCode" />
+            <ScalarProperty Name="State" ColumnName="State" />
+            <ScalarProperty Name="ResourceUrl" ColumnName="ResourceUrl" />
+            <ScalarProperty Name="ResourceType" ColumnName="ResourceType" />
+            <ScalarProperty Name="LanguageCode" ColumnName="LanguageCode" />
+            <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Auth_Role"><EntityTypeMapping TypeName="MyOLExamModel.Auth_Role"><MappingFragment StoreEntitySet="Auth_Role">
+            <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+            <ScalarProperty Name="LanguagueCode" ColumnName="LanguagueCode" />
+            <ScalarProperty Name="State" ColumnName="State" />
+            <ScalarProperty Name="IsSuperRole" ColumnName="IsSuperRole" />
+            <ScalarProperty Name="ApplicationID" ColumnName="ApplicationID" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Auth_RoleResource"><EntityTypeMapping TypeName="MyOLExamModel.Auth_RoleResource"><MappingFragment StoreEntitySet="Auth_RoleResource">
+            <ScalarProperty Name="RoleResourceID" ColumnName="RoleResourceID" />
+            <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+            <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+            <ScalarProperty Name="TimeMark" ColumnName="TimeMark" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Auth_UserResource"><EntityTypeMapping TypeName="MyOLExamModel.Auth_UserResource"><MappingFragment StoreEntitySet="Auth_UserResource">
+            <ScalarProperty Name="UserRerouceID" ColumnName="UserRerouceID" />
+            <ScalarProperty Name="UserID" ColumnName="UserID" />
+            <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+            <ScalarProperty Name="TimeMark" ColumnName="TimeMark" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Auth_UserRole"><EntityTypeMapping TypeName="MyOLExamModel.Auth_UserRole"><MappingFragment StoreEntitySet="Auth_UserRole">
+            <ScalarProperty Name="UserRoleID" ColumnName="UserRoleID" />
+            <ScalarProperty Name="UserID" ColumnName="UserID" />
+            <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+            <ScalarProperty Name="TimeMark" ColumnName="TimeMark" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="Auth" ZoomLevel="94">
+        <EntityTypeShape EntityType="MyOLExamModel.Auth_Resource" Width="1.5" PointX="0.75" PointY="2.125" Height="2.7341113281250005" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyOLExamModel.Auth_Role" Width="1.5" PointX="0.75" PointY="7.375" Height="2.3520719401041648" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyOLExamModel.Auth_RoleResource" Width="1.5" PointX="3" PointY="2.375" Height="2.1610522460937491" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyOLExamModel.Auth_UserResource" Width="1.5" PointX="3" PointY="5.375" Height="1.9700325520833335" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyOLExamModel.Auth_UserRole" Width="1.5" PointX="3" PointY="8.5" Height="1.9700325520833353" IsExpanded="true" />
+        <AssociationConnector Association="MyOLExamModel.FK_Auth_RoleResource_Auth_Resource" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="3.4555261230468748" />
+          <ConnectorPoint PointX="3" PointY="3.4555261230468748" />
+        </AssociationConnector>
+        <AssociationConnector Association="MyOLExamModel.FK_Auth_UserResource_Auth_Resource" ManuallyRouted="false">
+          <ConnectorPoint PointX="1.5" PointY="4.8591113281250005" />
+          <ConnectorPoint PointX="1.5" PointY="6.3600162760416667" />
+          <ConnectorPoint PointX="2.5416666666666665" PointY="6.3600162760416659" />
+          <ConnectorPoint PointX="2.7083333333333335" PointY="6.3600162760416667" />
+          <ConnectorPoint PointX="3" PointY="6.3600162760416667" />
+        </AssociationConnector>
+        <AssociationConnector Association="MyOLExamModel.FK_Auth_RoleResource_Auth_Role" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="7.375" />
+          <ConnectorPoint PointX="2.625" PointY="7" />
+          <ConnectorPoint PointX="2.625" PointY="4.0270411845703133" />
+          <ConnectorPoint PointX="3" PointY="4.0270411845703133" />
+        </AssociationConnector>
+        <AssociationConnector Association="MyOLExamModel.FK_Auth_UserRole_Auth_Role" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="9.1135359700520819" />
+          <ConnectorPoint PointX="3" PointY="9.1135359700520819" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

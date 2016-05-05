@@ -1,0 +1,33 @@
+﻿<div class="userbar">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <span class="login">
+                    <ul>
+                        <li><a href="/account/logoff">退出</a></li>
+                        @*<li><a href="/new4/invitation_codes">邀请码</a></li>*@
+                        <li><a href="/UserCenter/usercenter">用户中心</a></li>
+                        @{ var count = BLL.BLLMessages.GetNewMessageCount();
+                           }
+                        <li><a href="/UserCenter/messageinbox"> 短信
+                            @if (count > 0) { 
+                                @Html.Raw("<span style='color:red'>(" + count + ")</span>");
+                            }
+                            </a>
+                        </li>
+                        <li>Hi, <a class="username" href="/usercenter/usercenter">@User.Identity.Name </a></li>
+                    </ul>
+                </span>
+            }
+            else
+            {
+                <span class="logout">
+                    <ul>
+                        <li><a href="/Account/Register">注册</a></li>
+                        <li><a id="logintop" href="/Account/logon?returnurl=@Request.Url.AbsolutePath">登录</a></li>
+                        <li><a href="/account/QQLogin">
+                            <img alt="Connect_logo_4.png" src="http://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_3.png">
+                            </a></li>
+                    </ul>
+                </span>
+            }
+</div>

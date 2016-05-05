@@ -1,0 +1,138 @@
+﻿@model UserManager.Framework.Model.Auth_UserInfoCore
+  @{ var edit = Request.Url.AbsoluteUri.ToLower().Contains("myuserinfo");
+     Model.OpendValues = Model.OpendValues ?? "";
+     }
+           <style type="text/css">
+                            table .tdName{ width:40px; text-align:right; padding-right:5px; border-left:1px dotted #B4CCDD;}
+                            table .tdValue{ width:100px;text-align:left; padding-left:5px;}
+                            @if (edit)
+                            {
+                                @:table .tdIsShow{ width:50px;text-align:left; padding-left:5px;}
+                            }
+                            else
+                            {
+                                @:table .tdIsShow{ display:none}
+                            }
+                            #div_radselectuserPosts{ padding:0px; margin:0px;}
+                            #div_radselectuserPosts .selected{ border:1px solid #B4CCDD; border-bottom-width:0px;}
+                            #div_radselectuserPosts span{ padding:5px 5px 2px 5px; background-color:White; border-bottom:1px solid #B4CCDD;}
+                        </style>
+<div>
+    <div style="float:left; width:201px;border:0px solid yellow">
+        <img style="width:200px;" 
+        src="@(string.IsNullOrEmpty(Model.AvatarUrl) ? "../../Content/Images/men_head.gif" : Model.AvatarUrl.Replace("small.jpg","") + "large.jpg")" />
+    </div>
+
+    <div style="float:left; border:0px solid blue; margin-left:10px;">
+        <table cellpadding="5">
+            <caption style="text-align:left; font-size:14px; font-weight:bold;">个人资料</caption>
+            <tbody>
+                <tr>
+                    <td class="tdName">性别</td>
+                    <td class="tdValue">
+                        @if (Model.OpendValues.ToLower().Contains("sender") || edit)
+                        {
+                        <select id="sender" name="sender"><option value="-1">--请选择--</option> <option value="1">男</option><option value="2">女</option></select> 
+                        }
+                        else
+                        { 
+                            @:未公开
+                        }
+                    </td>
+                    <td class="tdIsShow"><input type="checkbox" name="ckbsender" @(Model.OpendValues.ToLower().Contains("sender;")?"checked":"")  />公开?</td>
+                    <td class="tdName">生日</td>
+                    <td class="tdValue">
+                        @if (Model.OpendValues.ToLower().Contains("birthday") || edit)
+                        {
+                        <input id="birthday" type="text" name="birthday" onclick="WdatePicker()" style="width:80px;" value="@(Model.Birthday == null ? "" : Model.Birthday.Value.ToString("yyyy-MM-dd"))" />
+                        }
+                        else
+                        { 
+                            @:未公开
+                        }
+                    </td>
+                    <td class="tdIsShow"><input type="checkbox" name="ckbbirthday" @(Model.OpendValues.ToLower().Contains("birthday;") ? "checked" : "") />公开?</td>
+                </tr>
+                <tr>
+                    <td class="tdName">省份</td>
+                    <td class="tdValue">
+                        @if (Model.OpendValues.ToLower().Contains("provinceid") || edit)
+                        {
+                            @Html.DropDownListFor(m => m.Provinceid, new SelectList(BLL.StaticData.Dic_Province, "ProvinceId", "ProvinceName"));
+                        }
+                        else
+                        { 
+                            @:未公开
+                        }
+                    </td>
+                    <td class="tdIsShow">
+                        <input type="checkbox" id="ckbprovinceid" name="ckbprovinceid" @(Model.OpendValues.ToLower().Contains("provinceid;") ? "checked" : "") />公开?
+                    </td>
+                    <td class="tdName">QQ</td>
+                    <td class="tdValue">
+                        @if (Model.OpendValues.ToLower().Contains("qq") || edit)
+                        {
+                            <input type="text" id="QQ" name="QQ" style="width:80px;" maxlength="11" value="@Model.qq" />
+                        }
+                        else
+                        { 
+                            @:未公开
+                        }
+                    </td>
+                    <td class="tdIsShow"><input type="checkbox" name="ckbQQ" @(Model.OpendValues.ToLower().Contains("qq;") ? "checked" : "") />公开?</td>
+                </tr>
+                <tr>
+                    <td class="tdName">简介</td>
+                    <td class="tdValue" colspan="5">
+                        <textarea name="describe" style="width:350px;" rows="10">@Html.Raw(Model.describe)</textarea>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="clear:both"></div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var sender = '@Model.Sender';
+        var provinceid = '@Model.Provinceid';
+        if (sender)
+            $("#sender").val(sender);
+        if(provinceid)
+            $("#provinceid").val(provinceid);
+        @if (!edit)
+        { 
+        @:$("input","table").add("select").add("textarea").attr("disabled","disabled");
+        }
+    });
+    
+</script>
+@if (edit)
+{
+<script type="text/javascript">
+    $.validator.addMethod("selectNone", function (value, element) {
+        if (value == "-1" || value == "") {
+            return false;
+        }
+        return true;
+    }, "Please select an option.");
+    jQuery.validator.addMethod("birthday", function (value, element) {
+        var chrnum = /^19[6-9][0-9]-\d\d-[0-3]\d$/; //^[\d\u4E00-\u9FA5]+$
+        return this.optional(element) || (chrnum.test(value));
+    }, "请选择真实的日期");
+    function ValidateForm() {
+        //更多validate验证方法见 jquery.validate.MethodsExt.js
+        $("form").validate({
+            rules: {
+                'sender': { required: true,selectNone:true },
+                'birthday': { required: true, birthday: true },
+                'provinceid': { required: true,selectNone:true }
+            }
+        });
+    }
+    $("document").ready(function () {
+        ValidateForm();
+    });
+</script>
+}

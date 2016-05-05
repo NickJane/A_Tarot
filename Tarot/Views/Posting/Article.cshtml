@@ -1,0 +1,55 @@
+﻿@model Data.MongoFramework.ModelMate.M_Post
+@using Lib.ClassExt;
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+
+    ViewBag.keywords = "塔罗来了, " + Model.Title;
+    ViewBag.description = Model.Content.Length > 20 ? Model.Content.Substring(0, 20) : Model.Content;
+
+    ViewBag.FKType = 2;//回帖的帖子类型
+    ViewBag.width1 = 630;
+    ViewBag.PostUserID =Model.m_User==null?-1: Model.m_User.UserID;
+    ViewBag.PageSize = 5;
+}
+<div style="float: left; width: 680px; border: 0px solid red; padding-right: 20px;">
+    <div style="font-size: 14px;">
+        @{ var posttype = (BLL.Enums.Mpost_PostType)Model.PostType;}
+        <a href="/">首页</a> >> <a href="@Url.Content(posttype == BLL.Enums.Mpost_PostType.News ? "~/postlist/news" : "~/postlist/articleList")">
+            @((posttype).ToLocalLanguage())</a> >> @Model.Title
+    </div>
+    <br />
+    <div style="font-weight: bold; font-size: 20px; text-align: center; font-family: 宋体;">@Model.Title</div>
+    <div style="text-align: center; color: Gray; margin-top: 6px;">
+        <span>塔罗来了</span>&nbsp;&nbsp;&nbsp; <span>@Model.PostTime.ToString("yyyy-MM-dd HH:mm")</span>
+        &nbsp;&nbsp;&nbsp; <span>@("人气:" + Model.ReplyCount + "/" + Model.PopularityCount)</span>
+    </div>
+    <div style="margin-top: 10px; line-height: 200%; font-size:14px;" id="div_articleContent">
+        @Html.Raw(Model.Content)
+    </div>
+    <div class="div1" style="float: left; width: 680px; border: 0px solid red; margin-top: 15px;">
+        <input style="float:right;" type="button" value="查看评论" 
+        onclick="javascript:var obj=document.getElementById('div__CommentPartial'); if(obj.style.display=='')obj.style.display='none';else obj.style.display='';" /><div style="clear: both"></div>
+        <div id="div__CommentPartial" style="display:none">
+        @{ if (Model.PostState == (int)BLL.Enums.Mpost_PostState.Normal) { Html.RenderPartial("_CommentPartial", Model._id.ToString()); }}
+        </div>
+    </div>
+    <div style="clear: both">
+    </div>
+    <script type="text/javascript">
+        var jiathis_config = {
+            data_track_clickback: true,
+            title: "@Model.Title #塔罗来了#",
+            summary: $("#div_articleContent").text().length > 80 ? $("#div_articleContent").text().substr(0, 80) : $("#div_articleContent").text()
+        }
+    </script>
+    <div id="ckepop" style="margin-top: 40px;">
+        <span class="jiathis_txt">分享到：</span> <a class="jiathis_button_qzone"></a><a class="jiathis_button_tsina">
+        </a><a class="jiathis_button_tqq"></a><a class="jiathis_button_renren"></a><a class="jiathis_button_kaixin001">
+        </a><a href="http://www.jiathis.com/share?uid=1566960" class="jiathis jiathis_txt jtico jtico_jiathis"
+            target="_blank"></a><a class="jiathis_counter_style"></a>
+    </div>
+</div>
+@Html.Partial("_LayoutSiteContentRightPart")
+<div style="clear: both">
+</div>

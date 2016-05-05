@@ -1,0 +1,181 @@
+﻿@using Authorizations.Framework;
+@using Authorizations.Framework.Model;
+@using Authorizations.Framework.Enums;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head >
+    <title>简单系统</title>
+    <link href="../../Content/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    @*<script src="../../Scripts/jquery-1.4.1.min.js" type="text/javascript"></script>*@
+    @*<script src="../../Scripts/jquery-1.5.1.min.js" type="text/javascript"></script>*@
+    @*<script src="../../Scripts/jquery-1.5.1-vsdoc.js" type="text/javascript"></script>*@
+    <script src="../../Scripts/jquery-1.5.2.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/ligerui/plugins/ligerLayout.js" type="text/javascript"></script>
+    <script src="../../Scripts/ligerui/plugins/ligerTree.js" type="text/javascript"></script>
+    <script src="../../Scripts/ligerui/plugins/ligerAccordion.js" type="text/javascript"></script>
+    <script src="../../Scripts/ligerui/plugins/ligerTab.js" type="text/javascript"></script>
+    <script src="../../Scripts/ligerui/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="../../Scripts/Common.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var accordion = null;
+        var tab = null;
+        var tree = null;
+        $(function () {
+            //布局
+            $("#layout1").ligerLayout({ leftWidth: 180, height: '100%', topHeight: 60, onHeightChanged: f_heightChanged, isRightCollapse: true });
+
+            //获得内容面板的高度
+            var height = $(".l-layout-center").height();
+
+            var accordion1Height = height - 24;
+            
+            //left菜单
+            accordion = $("#accordion1").ligerAccordion({ height: accordion1Height });
+            //Tab
+            tab = $("#framecenter").ligerTab({ height: height });
+            var js = [{ text: '权限管理', url: '', children: [{ text: '权限管理', url: '' }, { text: '权限管理', url: '' }, { text: '权限管理', url: ''}] }, { text: '系统设置', url: '', children: [{ text: '系统设置', url: ''}]}];
+
+        });
+//        window.onresize = function () {
+//            var hight = $(".l-layout-center").height();
+//            $(".l-tab-content").height(hight);
+//            $(".l-tab-content-item").height(hight);
+//        }
+    </script>
+    <script type="text/javascript">
+//        //IE高度发生改变时
+//        function f_heightChanged(options) {
+//            if (accordion && options.middleHeight - 24 > 0) {
+//                accordion.setHeight(options.middleHeight - 24);
+//            }
+//        }
+        function f_heightChanged(options) {
+            if (tab)
+                tab.addHeight(options.diff);
+            if (accordion && options.middleHeight - 24 > 0)
+                accordion.setHeight(options.middleHeight - 24);
+        }
+
+    </script>
+    <style type="text/css">
+        body{ padding: 0px;margin: 0 auto;}
+        #layout1{width: 100%;margin: 40px;height: 400px; margin: 0;padding: 0;}
+        #accordion1{height: 500px;} 
+        h4{margin: 20px;}
+        /*一级系统样式*/
+        .Div_Level1{  font-size:14px; }
+        .Div_Level1 ul{ border:1px solid #BED5F3; float:left; margin-top:19px; width:100%; background-color:#F5F9FE; border-bottom:0px; }
+        .Div_Level1 li{ float:left; position:relative; margin:0px 0px 0px 10px; border:1px solid #BED5F3; 
+                         background-color:#EAF2FE; width:80px; text-align:center;border-bottom:0px; cursor:pointer; }
+        .Div_Level1 li:hover{background-color:#BED5F3}
+        .Div_Level1 .selected{background-color:#BED5F3}
+        
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("li", ".Div_Level1").click(function () {
+                $("li", this.parent).removeClass("selected");
+                this.className = "selected";
+
+                LoadResources.call(this);
+            });
+            tree = $("#tree1").ligerTree({
+                            checkbox: false,
+                            nodeWidth: 100,
+                            attribute: ['nodename', 'url'],
+                            onSelect: function (node) {
+                                if (!node.data.url) return;
+                                var tabid = $(node.target).attr("tabid");
+                                if (!tabid) {
+                                    tabid = new Date().getTime();
+                                    $(node.target).attr("tabid", tabid)
+                                }
+                                if ($(">ul >li", tab.tab.links).length > 10) {
+                                    var currentTabid = $("li.l-selected", tab.tab.links).attr("tabid"); //当前选择的tabid
+                                    if (currentTabid == "home") return;
+                                    tab.overrideTabItem(currentTabid, { tabid: tabid, url: node.data.url, text: node.data.text });
+                                    return;
+                                }
+                                tab.addTabItem({ tabid: tabid, text: node.data.text, url: node.data.url });
+
+                            }
+                        });
+            if ($(".selected", ".Div_Level1")[0])
+                LoadResources.call($(".selected", ".Div_Level1")[0]);
+        });
+        function LoadResources() {
+            $("#tree1").html("");
+            var url = '@Url.Content("~/Home/TreeData")?pid=' + this.getAttribute('resourceCode') + "&rand=" + Math.random();
+            //$("#tree1").ligerTree({ url:url  });
+            tree.loadData($("#tree1")[0], url);
+        }
+        
+    </script>
+</head>
+<body>
+    <div id="layout1" style="overflow:hidden">
+        <div position="top">
+            <div style="float:left;margin:5px 10px 0 0;"> 简易生成系统</div>
+            <div style="float:right; margin:5px 10px 0 0;"> 
+                @{ Html.RenderPartial("_LogOnPartial");}
+            </div>
+            <div style="clear:both"></div>
+            @{
+                var Resources = ViewBag.Resources as IList<Auth_Resource>;
+                var userAccount= ViewBag.UserAccount as UserManager.Framework.ModelMate.Auth_UserAccountMate;
+                var isSuper = (bool)ViewBag.isSuper;
+                var level2 = Resources.Where(x => x.ResourceType == (int)ResourceEnum.SecondLevelModule).OrderBy(x => x.OrderIndex);
+                var i = 0; 
+                    }
+            <div class="Div_Level1">
+                <ul>
+                    @foreach (var item2 in level2)
+                    { 
+                        if (isSuper || AuthVisitor.HasPermission(userAccount.UserID, null, item2.ResourceCode))
+                        {
+                            <li resourceCode="@item2.ResourceCode" @(i == 0 ? "class=selected" : "")>@item2.LanguageCode</li>
+                        }
+                        i++;
+                    }
+                </ul>
+            </div>
+        </div>
+        <div position="left">
+            <div id="accordion1">
+                <div title="功能列表"> 
+                    <ul id="tree1">        
+                        @*<li isexpand="false"><span>节点3</span>
+                            <ul>
+                                <li url="@Url.Content("~/home/about")"><span>节点3.1</span></li>
+                                <li url="@Url.Content("~/home/page2")"><span>节点3.2</span></li>
+                            </ul>
+                        </li>*@
+                    </ul>
+                </div>
+                <div title="测试手风琴效果">
+                    测试
+                </div>
+            </div>
+        </div>
+        <div position="center" id="framecenter">
+            <div tabid="home" title="我的主页" style="height:300px" >
+                欢迎使用
+                @*<iframe frameborder="0" name="home" src="welcome.htm"></iframe>*@
+            </div> 
+        </div>
+        @*<div position="right">
+        </div>*@
+        <div position="bottom">
+        </div>
+    </div>
+    <script type="text/javascript">
+        HeartBeat();
+    </script>
+</body>
+</html>

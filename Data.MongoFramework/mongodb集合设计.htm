@@ -1,0 +1,37 @@
+﻿<script type="text/javascript">
+    var Posts = {
+        UserInfo: { UserID: 1, NicName: "擎天柱", AvatarURL: "" }
+        , PostID: "系统自带唯一objectid"
+        , PostTime: '2011-11-25'
+        , Title: ""
+        , Content: ""
+        , CardFormationInfo: { //塔罗牌阵型信息
+            CardFormationUrl: '', CardFormationName: "阵型名称", CardFormationID: 1, //牌型名, 牌型ID
+            W:300,H:300,
+            CardsInfo: [//按照阵型的牌的顺序的数组, describe//按阵型的顺序给出解释
+                { CardName: "", IsHandstand: false/*是倒立?*/, ImgUrl: "", IsPointCard: false, X:100, Y:100,SortIndex:1, Describe:"" }
+                , { CardName: "", IsHandstand: false/*是倒立?*/, ImgUrl: "", IsPointCard: false, X: 100, Y: 100, SortIndex: 2, Describe: "" }
+                , { CardName: "", IsHandstand: false/*是倒立?*/, ImgUrl: "", IsPointCard: false, X: 100, Y: 100, SortIndex: 3, Describe: "" }
+                , { CardName: "", IsHandstand: false/*是倒立?*/, ImgUrl: "", IsPointCard: false, X: 100, Y: 100, SortIndex: 4, Describe: "" }
+            ]
+        }
+        , ReplyCount: 3//回复数
+        , PopularityCount: 30//参与人数
+        , AuditState: 1//是否通过审核
+        , PostType: 1//1是塔罗牌, 2 是普通帖子
+        , PostState:1//帖子状态
+    }
+    
+    var Replies = {
+        UserInfo: { UserID: 1, NicName: "擎天柱", AvatarURL: "" }
+        , PostID:"主帖ID"
+        , ReplayID:"系统自带唯一objectid"
+        , ReplyTime: '2011-11-25'
+        , FatherReplyID: 1//评论分两级类似于QQ空间. 顶级评论为-1.
+        , TopCount:10//顶贴数
+    }
+
+    var UserDataCenter = {}//用户在本站的使用数据记录.待开发
+    // 各种日志记录. 待开发
+</script>
+查看源代码

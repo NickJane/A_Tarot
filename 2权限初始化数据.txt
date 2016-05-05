@@ -1,0 +1,41 @@
+delete from Auth_Application
+delete from Auth_Resource
+delete from Auth_Role
+delete from Auth_UserAccount
+delete from Auth_UserInfoCore
+delete from Auth_UserRole
+go
+SET IDENTITY_INSERT [Auth_Application] ON
+INSERT [Auth_Application] ([ApplicationID],[ApplicationName]) VALUES ( 1,N'运营管理中心')
+INSERT [Auth_Application] ([ApplicationID],[ApplicationName]) VALUES ( 2,N'塔罗来了站点')
+SET IDENTITY_INSERT [Auth_Application] OFF
+
+SET IDENTITY_INSERT [Auth_Resource] ON
+INSERT [Auth_Resource] ([ResourceID],[ResourceCode],[State],[ResourceType],[LanguageCode],[OrderIndex]) VALUES ( 1,N'001',1,1,N'运营管理中心1',1)
+INSERT [Auth_Resource] ([ResourceID],[ResourceCode],[State],[ResourceType],[LanguageCode],[OrderIndex]) VALUES ( 2,N'001001',1,2,N'系统管理',1)
+INSERT [Auth_Resource] ([ResourceID],[ResourceCode],[State],[ResourceType],[LanguageCode],[OrderIndex]) VALUES ( 3,N'001001001',1,3,N'权限管理',1)
+INSERT [Auth_Resource] ([ResourceID],[ResourceCode],[State],[ResourceUrl],[ResourceType],[LanguageCode],[OrderIndex]) VALUES ( 4,N'001001001001',1,N'/usermanager/userlist',4,N'用户管理',1)
+INSERT [Auth_Resource] ([ResourceID],[ResourceCode],[State],[ResourceUrl],[ResourceType],[LanguageCode],[OrderIndex]) VALUES ( 5,N'001001001002',1,N'/auth_rolemanager/list',4,N'角色管理',2)
+--INSERT [Auth_Resource] ([ResourceID],[ResourceCode],[State],[ResourceType],[LanguageCode],[OrderIndex]) VALUES ( 6,N'001001001003',1,4,N'权限设置',3)
+SET IDENTITY_INSERT [Auth_Resource] OFF
+
+SET IDENTITY_INSERT [Auth_Role] ON
+
+INSERT [Auth_Role] ([RoleID],[LanguagueCode],[State],[IsSuperRole],[ApplicationID]) VALUES ( 1,N'超级管理员',1,1,1)
+insert [Auth_Role] (RoleID,LanguagueCode,State,IsSuperRole,ApplicationID) values(2,'塔罗来了用户',1,0,2)
+
+SET IDENTITY_INSERT [Auth_Role] OFF
+
+
+SET IDENTITY_INSERT [Auth_UserAccount] ON
+
+INSERT [Auth_UserAccount] ([UserID],[UserName],[Password],[State],[ApplicationID]) VALUES ( 1,N'admin',N'202cb962ac59075b964b07152d234b70',1,1)
+SET IDENTITY_INSERT [Auth_UserAccount] OFF
+
+SET IDENTITY_INSERT [Auth_UserInfoCore] ON
+INSERT [Auth_UserInfoCore] ([UserInfoCoreID],[UserID],[RealName],[Sender],[Age],[Address]) VALUES ( 1,1,N'简佳林',1,24,N'beij')
+SET IDENTITY_INSERT [Auth_UserInfoCore] OFF
+
+SET IDENTITY_INSERT [Auth_UserRole] ON
+INSERT [Auth_UserRole] ([UserRoleID],[UserID],[RoleID]) VALUES ( 1,1,1)
+SET IDENTITY_INSERT [Auth_UserRole] OFF

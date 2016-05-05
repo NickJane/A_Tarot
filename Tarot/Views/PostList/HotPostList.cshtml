@@ -1,0 +1,11 @@
+﻿@model IList<Data.MongoFramework.ModelMate.M_Post>
+@{
+    ViewBag.Title = "塔罗来了, 塔罗牌热帖";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+    ViewBag.keywords = "塔罗来了, 塔罗热帖, 塔罗牌 ";
+    ViewBag.description = "塔罗来了, 塔罗热帖, 塔罗牌 ";
+    ViewBag.ActionName = "HotPostList";
+}
+@Html.Partial("_forlist",Model)
+
+

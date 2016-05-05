@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TarotModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="TarotModelStoreContainer">
+          <EntitySet Name="MyTask" EntityType="TarotModel.Store.MyTask" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MyTaskParameter" EntityType="TarotModel.Store.MyTaskParameter" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_MyTaskParameter_MyTask" Association="TarotModel.Store.FK_MyTaskParameter_MyTask">
+            <End Role="MyTask" EntitySet="MyTask" />
+            <End Role="MyTaskParameter" EntitySet="MyTaskParameter" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="MyTask">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="ClassPath" Type="nvarchar" MaxLength="100" />
+          <Property Name="LastRunTime" Type="datetime" />
+          <Property Name="NextRunTime" Type="datetime" />
+          <Property Name="Interval" Type="int" />
+          <Property Name="IntervalType" Type="int" />
+          <Property Name="enable" Type="bit" />
+          <Property Name="ApplicationID" Type="int" />
+          <Property Name="TryAgainTimes" Type="int" />
+        </EntityType>
+        <EntityType Name="MyTaskParameter">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="TaskID" Type="int" Nullable="false" />
+          <Property Name="ParmKey" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="ParmValue" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_MyTaskParameter_MyTask">
+          <End Role="MyTask" Type="TarotModel.Store.MyTask" Multiplicity="1" />
+          <End Role="MyTaskParameter" Type="TarotModel.Store.MyTaskParameter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MyTask">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MyTaskParameter">
+              <PropertyRef Name="TaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TarotModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="TarotEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MyTask" EntityType="TarotModel.MyTask" />
+          <EntitySet Name="MyTaskParameter" EntityType="TarotModel.MyTaskParameter" />
+          <AssociationSet Name="FK_MyTaskParameter_MyTask" Association="TarotModel.FK_MyTaskParameter_MyTask">
+            <End Role="MyTask" EntitySet="MyTask" />
+            <End Role="MyTaskParameter" EntitySet="MyTaskParameter" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="MyTask">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="ClassPath" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="LastRunTime" Type="DateTime" />
+          <Property Name="NextRunTime" Type="DateTime" />
+          <Property Name="Interval" Type="Int32" />
+          <Property Name="IntervalType" Type="Int32" />
+          <Property Name="enable" Type="Boolean" />
+          <Property Name="ApplicationID" Type="Int32" />
+          <Property Name="TryAgainTimes" Type="Int32" />
+          <NavigationProperty Name="MyTaskParameter" Relationship="TarotModel.FK_MyTaskParameter_MyTask" FromRole="MyTask" ToRole="MyTaskParameter" />
+        </EntityType>
+        <EntityType Name="MyTaskParameter">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="TaskID" Type="Int32" Nullable="false" />
+          <Property Name="ParmKey" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="ParmValue" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="MyTask" Relationship="TarotModel.FK_MyTaskParameter_MyTask" FromRole="MyTaskParameter" ToRole="MyTask" />
+        </EntityType>
+        <Association Name="FK_MyTaskParameter_MyTask">
+          <End Role="MyTask" Type="TarotModel.MyTask" Multiplicity="1" />
+          <End Role="MyTaskParameter" Type="TarotModel.MyTaskParameter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MyTask">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MyTaskParameter">
+              <PropertyRef Name="TaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TarotModelStoreContainer" CdmEntityContainer="TarotEntities">
+          <EntitySetMapping Name="MyTask"><EntityTypeMapping TypeName="TarotModel.MyTask"><MappingFragment StoreEntitySet="MyTask">
+            <ScalarProperty Name="ID" ColumnName="ID" />
+            <ScalarProperty Name="Name" ColumnName="Name" />
+            <ScalarProperty Name="ClassPath" ColumnName="ClassPath" />
+            <ScalarProperty Name="LastRunTime" ColumnName="LastRunTime" />
+            <ScalarProperty Name="NextRunTime" ColumnName="NextRunTime" />
+            <ScalarProperty Name="Interval" ColumnName="Interval" />
+            <ScalarProperty Name="IntervalType" ColumnName="IntervalType" />
+            <ScalarProperty Name="enable" ColumnName="enable" />
+            <ScalarProperty Name="ApplicationID" ColumnName="ApplicationID" />
+            <ScalarProperty Name="TryAgainTimes" ColumnName="TryAgainTimes" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MyTaskParameter"><EntityTypeMapping TypeName="TarotModel.MyTaskParameter"><MappingFragment StoreEntitySet="MyTaskParameter">
+            <ScalarProperty Name="ID" ColumnName="ID" />
+            <ScalarProperty Name="TaskID" ColumnName="TaskID" />
+            <ScalarProperty Name="ParmKey" ColumnName="ParmKey" />
+            <ScalarProperty Name="ParmValue" ColumnName="ParmValue" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="MyTask">
+        <EntityTypeShape EntityType="TarotModel.MyTask" Width="1.5" PointX="0.75" PointY="1" Height="3.1161507161458339" IsExpanded="true" />
+        <EntityTypeShape EntityType="TarotModel.MyTaskParameter" Width="1.5" PointX="3" PointY="1.5" Height="1.9700325520833335" IsExpanded="true" />
+        <AssociationConnector Association="TarotModel.FK_MyTaskParameter_MyTask" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="2.4850162760416667" />
+          <ConnectorPoint PointX="3" PointY="2.4850162760416667" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

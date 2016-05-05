@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "SystemParams";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+
+
+@using (Html.BeginForm()) {
+    <fieldset >
+        <legend>参数设定</legend>
+        <div class="editor-label">
+            异常接收邮箱
+        </div>
+        <div class="editor-field">
+            <textarea name="ExceptionsTo" style="width:500px;">@BLL.BLLSystemConfig.ExceptionToEmails</textarea>
+        </div>
+        <br />
+
+        <p>
+            <input type="submit" value="Save" />
+            @*<input type="button" value="123" onclick="$('.l-dialog-waittingdialog,.l-window-mask,.l-dialog', window.parent.document).remove();" />*@
+        </p>
+    </fieldset>
+}

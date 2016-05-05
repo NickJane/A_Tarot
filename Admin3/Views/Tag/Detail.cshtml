@@ -1,0 +1,59 @@
+﻿
+@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+@using BLL.Enums;
+@model Data.Framework.Model.Tag
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+
+
+    <fieldset >
+        <legend>详情</legend>
+        		<div class="display-label">
+			@Html.LabelFor(model => model.TagID)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.TagID)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.TagName)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.TagName)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.Popularity)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.Popularity)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.State)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.State)
+		</div>
+		<br >
+
+		
+		@*  selet example code
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ApplicationID)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.ApplicationID, new SelectList(ApplicationEnum.Admin.ToDictionary(), "key", "value"))
+        </div>*@
+
+    </fieldset>
+<p>
+@Html.ActionLink("Edit", "form", new { id=Model.TagID }) 
+        </p>

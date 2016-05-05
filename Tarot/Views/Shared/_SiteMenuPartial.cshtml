@@ -1,0 +1,40 @@
+﻿<div class="menu">
+                <ul style="padding-left:40px;">
+                    <li class="menuout" onmouseover="this.className='menuover'" onmouseout="this.className='menuout'">
+                        <a class="submenutitle" href="/home/index">首页</a>
+                        <a class="submenu" href="/postlist/news">塔罗新闻</a> 
+                        <a class="submenu" href="/postlist/articlelist">推荐文章</a> 
+                    </li>
+                    <li class="menuout"><a href="/PostList/NewPostList">塔罗新帖</a></li>
+                    <li class="menuout"><a href="/PostList/HotPostList">塔罗热帖</a></li>
+                    <li class="menuout"><a href="/PostList/BBSList">五花八门</a></li>
+                    @*<li class="menuout"><a href="/new2/late">审核</a></li>*@
+                    <li class="menuout"><a href="javascript:void(0);" title="开发中....">知识库</a></li>
+                    <li class="menuout" onmouseover="this.className='menuover'" onmouseout="this.className='menuout'" style="width:120px;">
+                        <a class="submenutitle" href="/Posting/posting" style="background-position:30px 0px; color:Red">在线占卜</a>
+                        <a class="submenu" href="/Posting/posting">塔罗来了</a> 
+                        <a class="submenu" href="/Posting/posting2">五花八门</a> 
+                    </li>
+                    @*<li class="menuout" style="margin-left:20px;"><a href="/PostList/News" title="">本站动态</a></li>*@
+                    @* 如果有二级目录的话
+                    <li class="menuout" onmouseover="this.className='menuover'" onmouseout="this.className='menuout'">
+                        <a class="submenutitle" href="/new2/hot">精华</a> 
+                        <a class="submenu" href="/new2/hot">
+                            24小时内</a> <a class="submenu" href="/new2/week">7天内</a> <a class="submenu" href="/new2/month">
+                                30天内</a> 
+                    </li>*@
+                </ul>
+            </div>
+          
+<script type="text/javascript">
+    var __url = '@HttpContext.Current.Request.Url.AbsoluteUri.ToUpper()';
+    var __uri='@Request.Url.AbsolutePath';
+    $("a", ".menu").each(function (i) {
+        //alert(url+' '+this.href.toUpperCase());
+        if (__url==this.href.toUpperCase())
+            this.id = "highlight";
+        if(i==0 && __uri=='/')
+            this.id = "highlight";
+    });
+    
+</script>

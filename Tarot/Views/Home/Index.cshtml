@@ -1,0 +1,97 @@
+﻿@model IList<Data.MongoFramework.ModelMate.M_Post>
+@{
+    ViewBag.Title = "塔罗来了_最纯粹的塔罗牌社区";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+    ViewBag.keywords = "塔罗来了, 指引人生, 塔罗牌, 塔罗牌算命, 塔罗牌社区, 塔罗牌在线占卜";
+    ViewBag.description = "网友的塔罗牌社区, 塔罗牌在线占卜, 努力做最纯粹最欢乐的塔罗牌社区, 让塔罗牌指引你的人生";
+    
+
+    ViewBag.ActionName = "NewPostList";
+}
+<!--[if lt IE 7]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;'> <a href="http://windows.microsoft.com/zh-CN/internet-explorer/downloads/ie?ocid=ie6_countdown_bannercode"><img src="http://www.theie6countdown.cn/img/banner/upgrade.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." /></a></div> <![endif]--> 
+<script src="../../Scripts/SliderShow.js" type="text/javascript"></script>
+<style type="text/css" >
+    .li_dot {FONT-SIZE: 12px; COLOR: #ed1264; FONT-FAMILY: Webdings}
+
+#flash_show_out {MARGIN-TOP: 5px; FLOAT: left; WIDTH: 322px;}
+#flash_show {BORDER-TOP-WIDTH: 4px; PADDING-RIGHT: 0px; PADDING-LEFT: 0px; BORDER-LEFT-WIDTH: 4px; BORDER-BOTTOM-WIDTH: 4px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; POSITION: relative; HEIGHT: 240px; TEXT-ALIGN: center; BORDER-RIGHT-WIDTH: 4px}
+#flash_img {BORDER-RIGHT: #f27e96 1px solid; BORDER-TOP: #f27e96 1px solid; 
+            FILTER: progid:DXImageTransform.Microsoft.Fade(Overlap=1.00); OVERFLOW: hidden; 
+            BORDER-LEFT: #f27e96 1px solid; WIDTH: 320px; BORDER-BOTTOM: #f27e96 1px solid; HEIGHT: 100%}
+#flash_btn {LEFT: 1px; POSITION: absolute; TOP: 165px}
+#flash_btn DIV { margin-left:5px; margin-bottom:4px;}
+#flash_show_ctl {PADDING-RIGHT: 0px; MARGIN-TOP: 2px; PADDING-LEFT: 0px; PADDING-BOTTOM: 3px; COLOR: #434343; PADDING-TOP: 3px; HEIGHT: 16px}
+#flash_show_ctl A {COLOR: #434343}
+#flash_show_ctl_msg {FILTER: progid:DXImageTransform.Microsoft.Fade(Overlap=1.00); FLOAT: left; OVERFLOW: hidden; WIDTH: 289px}
+#flash_show_ctl_tuber {Z-INDEX: 100; LEFT: 305px; POSITION: relative; TOP: -17px}
+#flash_show_ctl_arrow {MARGIN-RIGHT: 5px}
+    
+    .div_hot{ text-align:center;}
+    .div_hot .A_Title{ font-size:22px; color:Red; font-weight:bold;}
+    #div_ContentList ul{ margin-left:15px;}
+    #div_ContentList li{ float:left;  font-size:14px; border:0px red solid; list-style-type:circle; margin:5px 0 0 0; width:320px;}
+    #div_ContentList .div_articleList li{ width:155px;}
+</style>
+<div style="float: left; width: 680px; padding-right: 10px; margin-top: 0px;">
+    <div style=" float: left">
+        <div id="divSilderShow" style="width: 330px; height: 260px;">
+            <div id="flash_show_out">
+                <!--flash幻灯展示开始-->
+                <div id="flash_show">
+                    <div id="flash_img">
+                    </div>
+                    <div id="flash_btn">
+                        <div>
+                            <a onclick="javascript:showImage(0);return false;" href="#" target="_self">
+                                <img height="13" alt="第1幅" src="http://@(Request.Url.Host)/content/images/slidershow/flash_btn_1.gif" width="13" border="0"></a></div>
+                        <div>
+                            <a onclick="javascript:showImage(1);return false;" href="#" target="_self">
+                                <img height="13" alt="第2幅" src="http://@(Request.Url.Host)/content/images/slidershow/flash_btn_2.gif" width="13" border="0"></a></div>
+                        <div>
+                            <a onclick="javascript:showImage(2);return false;" href="#" target="_self">
+                                <img height="13" alt="第3幅" src="http://@(Request.Url.Host)/content/images/slidershow/flash_btn_3.gif" width="13" border="0"></a></div>
+                        <div>
+                            <a onclick="javascript:showImage(3);return false;" href="#" target="_self">
+                                <img height="13" alt="第4幅" src="http://@(Request.Url.Host)/content/images/slidershow/flash_btn_4.gif" width="13" border="0"></a></div>
+                    </div>
+                </div>
+                <!--flash幻灯展示结束-->
+                <!--flash幻灯展示控制开始-->
+                <div id="flash_show_ctl">
+                    <div id="flash_show_ctl_msg">
+                        <span class="li_dot">4</span><a id="flash_title" href="http://www.cnzz.cn/#"></a>
+                    </div>
+                    <div style="padding-top: 2px">
+                        <a id="img_prev_btn" onclick="showPrevImage();return false;" href="http://www.cnzz.cn/#"
+                            target="_self">
+                            <img height="12" alt="上一页" src="http://@(Request.Url.Host)/content/images/slidershow/flash_back.gif" width="11" border="0"></a>
+                        <a id="img_next_btn" onclick=" showNextImage();return false;" href="http://www.cnzz.cn/#"
+                            target="_self">
+                            <img height="12" alt="下一页" src="http://@(Request.Url.Host)/content/images/slidershow/flash_next.gif" width="11" border="0"></a>
+                    </div>
+                </div>
+                <script language="javascript" type="text/javascript">
+                    var fImgs = new Array();
+                    var srcs = @Html.Raw( ViewBag.SilderShow0);
+                    var texts = @Html.Raw(ViewBag.SilderShow1);
+                    var urls = @Html.Raw(ViewBag.SilderShow2);
+                    for (var i = 0; i < srcs.length; i++) {
+                        fImgs[i]={title:texts[i],img:srcs[i], href:urls[i]};
+                    }
+                    imagePlay();
+                </script>
+                <!--flash幻灯展示控制结束-->
+            </div>
+        </div>
+        
+    </div>
+    <div id="div_ContentList" style="width: 340px;  float: right">
+            @Html.Partial("indexpartial/head")
+            
+        </div>
+        
+</div>
+
+@Html.Partial("_LayoutSiteContentRightPart")
+<div style="clear: both">
+</div>

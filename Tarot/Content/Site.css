@@ -1,0 +1,121 @@
+﻿/*----------------------------------------------------------
+The base color for this template is #5c87b2. If you'd like
+to use a different color start by replacing all instances of
+#5c87b2 with your new color.
+----------------------------------------------------------*/
+body { /*background-color: #5c87b2;*/
+    background: url("images/bg.png") no-repeat scroll center 40px #E0F4FF;
+    font-size: 12px;
+    font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
+    margin: 0 auto;
+    padding: 0 auto;
+    color: #696969;
+}
+A { text-decoration:none;}
+A:link {  color:Black}
+.reg_logo {
+    /*background: url("http://www.baidu.com/img/baidu_sylogo1.gif") no-repeat scroll 0 0 transparent;*/
+    color: #71AD3F;
+    display: block;
+    font: bold 28px "黑体";
+    outline: medium none;
+    padding-left: 125px;
+}
+/*div for body*/
+.page {width: 1024px; margin:0 auto; color:#3B3B3B;}
+
+.divInLineBlock{display:inline-block;*display:inline;*zoom:1;}
+
+/*头部*/
+.header, #header {text-align: center; border:0px solid red; height:50px;}
+.header .logo{float: left; clear: both; font: bold 28px 黑体; color: #71AD3F; line-height:50px;}
+ol,ul { list-style:none; } 
+.userbar {text-align:right; float:right;}
+.userbar li{float:right;margin:10px 0 0 15px;}
+.userbar li a{ color:#558BC4; text-decoration:none}
+.userbar .hidden {display:none;}
+/*内容块*/
+.content {
+    padding: 20px 30px 15px 30px;
+    background-color: #fff;
+    border-radius: 4px 0 0 0;
+    -webkit-border-radius: 4px 0 0 0;
+    -moz-border-radius: 4px 0 0 0;
+    border: 1px solid #B4CCDD;
+}
+
+.foot {clear: both;padding: 30px 0 0;
+       /*position:fixed;left:auto;right:auto;bottom:0;
+      _position:absolute;_top:expression(document.documentElement.clientHeight + document.documentElement.scrollTop - this.offsetHeight);
+      text-align:center;*/
+       }
+.foot .copyright {float: left;width: 600px;}
+.foot .anchor {float: left;text-align: right;width: 360px;}
+.foot .anchor a {margin: 0 0 0 20px;}
+
+
+/* FORM LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+fieldset {border: 1px solid #ddd;padding: 0 1.4em 1.4em 1.4em;margin: 0 0 1.5em 0;padding:15px;}
+legend {font-size: 1.2em;font-weight: bold;}
+textarea {min-height: 75px;}
+input[type="text"], input[type="password"] {border: 1px solid #ccc;padding: 2px;font-size: 1.2em;color: #444;width: 200px;}
+select {border: 1px solid #ccc;padding: 2px;font-size: 1.2em;color: #444;}
+input[type="submit"] {font-size: 1.2em;padding: 5px;}
+
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error {color: #ff0000;}
+.field-validation-valid {display: none;}
+
+.input-validation-error {border: 1px solid #ff0000;background-color: #ffeeee;}
+.validation-summary-errors {font-weight: bold;color: #ff0000;}
+.validation-summary-valid {display: none;}
+
+.errorDiv{text-align:center;}
+.error{color:Red;}
+input.error{border: 1px solid #ff0000;background-color: #ffeeee;}
+.tip{padding-left:4px;}
+.tip1{padding-left:4px;color:Red;}
+.tip2{padding-left:4px;padding-left:4px;}
+label{padding-left:2px;}
+.kuangkuang{border:1px solid #FFE4C4; padding:2px 5px; background-color:#F0FFFF;cursor:hand;}
+
+/* Styles for editor and display helpers
+----------------------------------------------------------*/
+.display-label, 
+.editor-label {margin: 1em 0 0 0; display:inline-block;*display:inline;*zoom:1;text-align:left;width:100px;}
+
+.display-field, 
+.editor-field {margin: 0.5em 0 0 0; display:inline-block;*display:inline;*zoom:1;text-align:left;}
+.text-box {width: 30em;}
+.text-box.multi-line {height: 6.5em;}
+.tri-state {width: 6em;}
+
+/*分页*/
+div.sabrosus {
+	padding-right: 3px; padding-left: 3px; padding-bottom: 3px; margin: 3px; padding-top: 3px; text-align: center
+}
+div.sabrosus a {
+	border-right: #9aafe5 1px solid; padding-right: 5px; border-top: #9aafe5 1px solid; padding-left: 5px; padding-bottom: 2px; border-left: #9aafe5 1px solid; color: #2e6ab1; margin-right: 2px; padding-top: 2px; border-bottom: #9aafe5 1px solid; text-decoration: none
+}
+div.sabrosus a:hover {
+	border-right: #2b66a5 1px solid; border-top: #2b66a5 1px solid; border-left: #2b66a5 1px solid; color: #000; border-bottom: #2b66a5 1px solid; background-color: lightyellow
+}
+div.pagination a:active {
+	border-right: #2b66a5 1px solid; border-top: #2b66a5 1px solid; border-left: #2b66a5 1px solid; color: #000; border-bottom: #2b66a5 1px solid; background-color: lightyellow
+}
+div.sabrosus a.current {
+	border-right: navy 1px solid; padding-right: 5px; border-top: navy 1px solid; padding-left: 5px; font-weight: bold; padding-bottom: 2px; border-left: navy 1px solid; color: #fff; margin-right: 2px; padding-top: 2px; border-bottom: navy 1px solid; background-color: #2e6ab1
+}
+div.sabrosus a.disabled {
+	border-right: #929292 1px solid; padding-right: 5px; border-top: #929292 1px solid; padding-left: 5px; padding-bottom: 2px; border-left: #929292 1px solid; color: #929292; margin-right: 2px; padding-top: 2px; border-bottom: #929292 1px solid
+}
+div.sabrosus span.current {
+	border-right: navy 1px solid; padding-right: 5px; border-top: navy 1px solid; padding-left: 5px; font-weight: bold; padding-bottom: 2px; border-left: navy 1px solid; color: #fff; margin-right: 2px; padding-top: 2px; border-bottom: navy 1px solid; background-color: #2e6ab1
+}
+div.sabrosus span.disabled {
+	border-right: #929292 1px solid; padding-right: 5px; border-top: #929292 1px solid; padding-left: 5px; padding-bottom: 2px; border-left: #929292 1px solid; color: #929292; margin-right: 2px; padding-top: 2px; border-bottom: #929292 1px solid
+}

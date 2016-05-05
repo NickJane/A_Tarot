@@ -1,0 +1,158 @@
+﻿@model IList<Data.MongoFramework.ModelMate.M_Post>
+@using Tarot.Models;
+@*父div为<div class="content" style="border: 0px solid red; margin-top: 20px;">*@
+@{ 
+    var width = 700; //(Model.CardFormationInfo.W + 170) > 600 ? 600 : (Model.CardFormationInfo.W + 190);
+    var right = width == 600 ? 400 : (600 - width);
+}
+<style type="text/css">
+    #div_cf_content
+    {
+        border: 0px solid #55A5D8;
+        background-color: #E6EFF4;
+    }
+    #div_cf_content #div_CardFormation
+    {
+        display: inline-block;
+        float: left;
+        position: relative;
+    }
+    #div_cf_content #div_CardDescribe
+    {
+        display: inline-block;
+        float: right;
+        border-left: 0px solid #55A5D8;
+        overflow-y: scroll;
+        margin: 10px 10px 0px 0px;
+        font-size: 14px;
+    }
+    #div_cf_content .divTarotCard
+    {
+        border: 1px solid #55A5D8;
+    }
+    .div_postinfoSingle
+    {
+        @(Request.Url.AbsolutePath.ToLower().Contains("postdetail")?"background-color:#E6EFF4;":"")
+        padding:0px 10px 0px 10px; 
+        @(Request.Url.AbsolutePath.ToLower().Contains("postdetail")?"":"border-bottom: dotted 1px black;")
+        }
+    .div_postinfoSingle > div{ width:100%;}
+    .span_contentStart {font-size:12px;color:Gray; margin-right:10px;}
+    
+</style>
+<script type="text/javascript">
+    function UpdatePost(id, action, title) {
+        $.get("/Posting/" + action + "?rd=" + Math.random(), { id: id, desc: title }, function (json) {
+            if (json.State == 1) {
+                alert('操作成功');
+            }
+        })
+    }
+    function UpPost(id, obj) {
+        $.get("/Posting/AJAXUpPost?actiontype=mark&rd=" + Math.random(), { id: id }, function () { })
+        var span = $("span", obj.parentNode).first();
+        span.text(parseInt(span.text()) + 1);
+    }
+</script>
+<div style="float: left; width: @(width + "px"); border: 0px solid red;  ">
+    @foreach (var item in Model)
+    {
+        <div style="margin-top: 10px;">
+            <div style="float:left;width: @(width - 150 + "px");">
+                <div class="div_postinfoSingle">
+                    @if (BLL.UserInfo.CurrentUserResources.Contains("002001001001001"))
+                    { 
+                        <div class="editor-label">
+                            @if (item.PostState == 1)
+                            {
+                                <input type="button" value="锁定该贴" onclick="UpdatePost('@item._id.ToString()','deletepost','@item.Title')" />
+                            }
+                            else if (item.PostState == 0)
+                            { 
+                                <input type="button" value="恢复该贴" onclick="UpdatePost('@item._id.ToString()','returnpost','@item.Title')" />
+                            }
+                        </div>
+                        <br />
+                    }
+                    <span style="color: Red">@(item.PostState == (int)BLL.Enums.Mpost_PostState.Lock ? "该贴已被锁定!" : "")</span>
+                    <div class="editor-label">
+                        <span style="font-size: 18px;"><a href="/posting/postdetail/@item._id.ToString()">@item.Title</a>
+                        </span>
+                    </div>
+                    <br>
+                    <div class="editor-label" style="font-size:12px; color:Gray">
+                    @{ var _content =  item.Content; }
+                        <div style="width:@(width - 250 + "px"); margin-left:60px;" title="@_content" class="textoverflow">
+                        @Html.Raw(_content)
+                        </div>
+                        <span class="span_contentStart">牌阵</span> <span style="font-size: 13px; font-weight: bolder;">
+                            <a>@item.CardFormationInfo.CardFormationName</a></span> <span class="span_contentStart">
+                                Tags</span>
+                        @foreach (var _item in item.CustomerTags)
+                        {
+                            string url = string.Format("http://www.google.com/cse?cx=016222199086485784095:ynnkhml7jiw&q={0}#gsc.tab=0&gsc.q={0}&gsc.page=1",
+                                HttpUtility.UrlEncode("tags " + _item.TagName));
+                            <a title="标签" href="@url" target="_blank">@_item.TagName</a>
+                        }
+                    </div>
+                    <br>
+                    <div class="editor-label" style="color: Gray">
+                        @{ var headimg = (!User.Identity.IsAuthenticated || string.IsNullOrEmpty(item.m_User.AvatarURL)) ?
+               Url.Content("~/content/images/men_head.gif") : item.m_User.AvatarURL; }
+                        <div style="float: left">
+                            <img original="@headimg" class="imgUserHead" style="width:25px;" />
+                            <span class="span_UserSpecial" UserSpecialID="@item.m_User.UserSpecialID"></span>
+                            <span style="color:#55B2E4;width:100px;" title="@item.m_User.NicName" class="divInLineBlock textoverflow">
+                                @if (item.m_User.UserID == -1)
+                                {
+                                    @item.m_User.NicName
+                                }
+                                else
+                                { 
+                                    <a href="/usercenter/userinfo/@item.m_User.UserID" target="_blank">@item.m_User.NicName</a>
+                                }
+                            </span>
+                        </div>
+                        <div style="float: right; margin-top: 12px;">
+                            <span style="font-size: 11px;">@item.PostTime</span> <span style="margin: 0px 10px 0px 10px;">
+                                <a href="javascript:void(0);" onclick="javascript:UpPost('@item._id.ToString()',this);">
+                                    <img src="@Url.Content("~/Content/Images/web09.gif")" title="mark" alt="mark" />
+                                    (<span>@(item.Mark)</span>)</a> </span><span style="margin: 0px 10px 0px 10px;">@(item.ReplyCount + "/" + item.PopularityCount)</span>
+                            @if (Request.Url.AbsolutePath.ToLower().Contains("postdetail"))
+                            {
+
+                            }
+                            else
+                            {
+                                <span style="margin: 0px 10px 0px 10px;"><a href="/posting/postdetail/@item._id.ToString()">
+                                    查看详情</a></span>
+                            }
+                        </div>
+                        <div style="clear: both">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="editor-label">
+                    </div>
+                </div>
+            </div>
+            <div style="float:left;width: @(140 + "px"); ">
+                @{ var img = "http://" + Request.Url.Host + "/" + item.CardFormationInfo.CardFormationUrl.Substring(item.CardFormationInfo.CardFormationUrl.ToLower().IndexOf("content"));}
+                <img title="点击查看大图" original="@img" alt="@(item.CardFormationInfo.CardFormationName + "-牌阵预览图")" style="width:100px; cursor:pointer;"
+                 onclick="javascript:window.open('@img.Replace("\\", "/")');" />@*/posting/postdetail/@item._id.ToString()*@
+            </div>
+            <div style="clear: both">
+            </div>
+        </div>
+    }
+    <div class="sabrosus">
+        @(Html.myPager((int)ViewBag.PageCount,
+            (int)ViewBag.CurrentPage, x => Url.Action(ViewBag.ActionName, new { id = x })))
+    </div>
+</div>
+@Html.Partial("_LayoutSiteContentRightPart")
+<div style="clear: both">
+</div>
+<script type="text/javascript">
+
+</script>

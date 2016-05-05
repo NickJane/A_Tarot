@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "sildershowRight";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+
+<h2>sildershowRight</h2>
+@using (Html.BeginForm())
+{
+<script type="text/plain" id="myEditor">@Html.Raw( ViewBag.htmls)</script>
+<script type="text/javascript">
+    var editor = new baidu.editor.ui.Editor();
+    editor.render("myEditor");
+</script>
+    @Html.ValidationSummary()
+<input type="submit" value="submit" />
+}

@@ -1,0 +1,355 @@
+﻿@{
+    ViewBag.Title = "塔罗牌在线占卜";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+
+    ViewBag.keywords = "塔罗来了, 塔罗牌在线占卜,";
+    ViewBag.description = "塔罗来了, 塔罗牌在线占卜,";
+}
+@using Lib.ClassExt;
+@using BLL.Enums;
+@using Data.Framework.DataProvider;
+@using Data.Framework.Model;
+@using Data.MongoFramework.ModelMate;
+@model M_Post
+<style type="text/css">
+    input[type='text']
+    {
+        width: 300px;
+    }
+    textarea
+    {
+        width: 400px;
+        height: 100px;
+    }
+    .FormationName
+    {
+        font-size: 14px;
+        font-weight: bolder;
+    }
+    /*背牌容器*/
+    .div_bgCardContent
+    {
+        border: 1px solid #55A5D8;
+        background-color: #E6EFF4;
+        padding: 5px;
+        position: relative;
+    }
+    
+    .BigSubmit
+    {
+        font-size: 18px;
+    }
+    
+    
+    #div_cf_content
+    {
+        border: 1px solid #55A5D8;
+        background-color: #E6EFF4;
+        display: none;
+    }
+    #div_cf_content #div_cf_operation
+    {
+        border-bottom: 1px solid #55A5D8;
+    }
+    #div_cf_content #div_CardFormation
+    {
+        display: inline-block;
+        float: left;
+        position: relative;
+    }
+    #div_cf_content #div_CardDescribe
+    {
+        display: inline-block;
+        float: left;
+        border-left: 1px solid #55A5D8;
+        overflow-y: scroll;
+    }
+    #div_cf_content .divTarotCard
+    {
+        border: 1px solid #55A5D8;
+    }
+</style>
+@{ Html.RenderPartial("../shared/jquery.tmpl/_sc_cardFormation_White");}
+@*背牌, 牌阵显示*@
+<script type="text/javascript">
+    var CardFormation = null;
+    function ShowBGTarots() {
+        if (!CardFormation) return;
+        $("#FormationName").html(CardFormation.FormationName);
+        getRandomCards(document.getElementById('div_randomCards'), CardFormation.NeedAllCards, false);
+
+        if (CardFormation && CardFormation.CardFormationID > 0) {
+            $("#div_cf_content").show();
+            InitFormation({}, CardFormation);
+        }
+    }
+
+    function ShowRandomCards(targetDiv, json) {
+        var cards = [];
+        var imgheight = 30; var cardTop = 20;
+        cards.push("<div class='div_bgCardContent' style='height:", json.length == 22 ? 80 : 150, "px; width:670px;'>");
+        for (var i = 0; i < json.length; i++) {
+            var left; var top;
+            if (i <= 38) { left = 10 + i * 16; top = cardTop; }
+            else { left = 10 + (i - 39) * 16; top = 60 + imgheight; }
+            cards.push("<div class='div_bgCard' data='", escape(Tools.JsonToString(json[i])),
+                        "' style='position:absolute; left:", left, "px; top:", top, "px; z-index:", 10 + i, ";");
+            //cards.push("'><img style='width:", imgheight, "px;' src='", json[i].CardUrl, "' /></div>");
+            cards.push("'><img style='width:", imgheight, "px;' src='../../content/images/tarotcard/bg.jpg' /></div>");
+        }
+        cards.push("</div>");
+        $(targetDiv).append(cards.join(""));
+        $(".div_bgCard").click(function () {
+            SelectCard.call(this);
+        });
+    }
+</script>
+@*点击背牌*@
+<script type="text/javascript">
+    var cardurl = '@Url.Content("~/content/images/TarotCard/")';
+    var handstandcardurl = '@Url.Content("~/content/images/HandstandTarotCard/")';
+
+    function SelectCard() {
+        var sortIndex = $('img', '.divTarotCard').length + 1; //当前是牌阵第几张牌
+        var target = $(".divTarotCard[index='" + sortIndex + "']");
+
+        var card = eval('(' + unescape(this.getAttribute("data")) + ')');
+
+        if (target.length == 0) return;
+
+        //牌阵占位添加图片
+        var source = $(this);
+        var cardjpg = $('img', source)[0].getAttribute('src');
+        @*调试使用(card.IsHandstand.toLowerCase()=='true' ? handstandcardurl : cardurl) + card.CardID + ".jpg";*@
+        var img = "<img style='width:95%' data='"+this.getAttribute("data")+"' src='" + cardjpg + "' />";
+        target.append(img); $('img', target).hide();
+        //牌阵满了则允许提交表单
+        if ($('img', '.divTarotCard').length == $('.divTarotCard').length)
+        {    
+            var submit=$("#btnsub");
+            submit[0].disabled = false;
+            submit.addClass("BigSubmit");
+        }
+
+        $(this).animate(
+            { left: target.position().left, top: (target.offset().top - source.offset().top) },
+            "slow","linear",
+            function () {
+                source.remove();
+                $('img', target).show();
+            }
+        );
+
+    }
+</script>
+@*从服务器拿随机背牌*@
+<script type="text/javascript">
+    function getRandomCards(targetDiv, NeedAllCards, isgongtingpai) {
+        $.ajax({
+            type: "POST", //用POST方式传输
+            dataType: "json", //数据格式:JSON
+            url: "/Posting/AJAXgetRandomCards?rd=" + Math.random(), //目标地址
+            data: { NeedAllCards: NeedAllCards, IsGongTingPai: isgongtingpai },
+            beforeSend: function () { $(targetDiv).html("<span style=\"color:red\">正在洗牌......</span>"); }, //发送数据之前
+            complete: function () { }, //接收数据完毕
+            error: function () { $(targetDiv).html("<span style=\"color:red\">不好意思, 出错了. 我们会马上处理</span>"); },
+            success: function (json) {
+                $(targetDiv).html("");
+                ShowRandomCards(targetDiv, json);
+                document.getElementById("btnF5").disabled = false;
+
+                $(".div_bgCard").mouseover(function () {
+                    $(this).css('top', parseFloat($(this).css('top').replace(/px/gi, '')) - 10);
+                });
+                $(".div_bgCard").mouseout(function () {
+                    $(this).css('top', parseFloat($(this).css('top').replace(/px/gi, '')) + 10);
+                });
+
+            }
+        });
+    }
+</script>
+@*初始化牌阵*@
+<script type="text/javascript">
+
+    function InitFormation(params, cardFormationModel) {
+        ///	<summary>
+        ///  {divFormationID牌阵div ,  divCardDescribe牌阵描述div}
+        ///	</summary>
+        ///	<returns type="array" />
+        var p = {
+            divFormationID: "div_CardFormation",
+            divCardDescribe: "div_CardDescribe"
+        };
+
+        $.extend(p, params);
+        var div_CardFormation = $("#" + p.divFormationID); var div_CardDescribe = $("#" + p.divCardDescribe)
+        div_CardFormation.css({ height: cardFormationModel.PlaceHeight, width: cardFormationModel.PlaceWidth });
+        div_CardDescribe.css({ height: cardFormationModel.PlaceHeight, width: 100 });
+        $(div_CardFormation[0].parentNode).css('width', parseFloat(cardFormationModel.PlaceWidth) + 110);
+        $.ajax({
+            type: "POST", //用POST方式传输
+            dataType: "json", //数据格式:JSON
+            url: "/Posting/AJAXgetCardFormationCore?rd=" + Math.random(), //目标地址
+            data: { FormationID: cardFormationModel.CardFormationID },
+            beforeSend: function () {
+                div_CardFormation.html("<span style=\"color:red\">正在加载牌阵......</span>");
+                div_CardDescribe.html("<span style=\"color:red\">正在加载牌阵......</span>");
+            }, //发送数据之前
+            complete: function () { }, //接收数据完毕
+            error: function () { div_CardFormation.html("<span style=\"color:red\">不好意思, 出错了. 我们会马上处理</span>"); },
+            success: function (json) {
+                div_CardFormation.html("");
+                div_CardDescribe.html("");
+                $('#sc_CardFormation_White').tmpl(json).appendTo(div_CardFormation);
+                $('#sc_CardFormation_Desc').tmpl(json).appendTo(div_CardDescribe);
+                location.href = "#miaodian_title";
+            }
+        });
+    }
+</script>
+@if (!User.Identity.IsAuthenticated)
+{
+    <h3 
+       @if (ViewData["AnonymityError"] != null)
+       {
+            @:style='color:red';
+       }
+    >
+        未注册用户每天只能发三贴.</h3>
+}
+@Html.ValidationSummary()
+@using (Html.BeginForm("posting", "posting", FormMethod.Post, new { id = "form1" }))
+{
+@*父div为<div class="content" style="border: 0px solid red; margin-top: 20px;">*@
+    <div style="float: left; width: 700px; border: 0px solid red;">
+        <div>
+            <a href="http://www.taluolaile.com/posting/newsdetail/4f43b69da51b1a13f0148157" style="color:Red; font-weight:bold;">帮助,如何进行塔罗牌在线占卜? </a> <br />
+            <div class="editor-label">
+                你想算什么
+            </div>
+            <div class="editor-field">
+                @*<input type="text" name="Title" autocomplete="off" />*@ <a name="miaodian_title">
+                </a>
+                @Html.EditorFor(model => model.Title) @Html.ValidationMessageFor(model => model.Title)
+            </div>
+            <br />
+            <div class="editor-label">
+                标签(例如, 爱情 事业)
+            </div>
+            <div class="editor-field">
+                <input type="text"  name="CustomerTag" maxlength="30" /><i style="font-size: 11px; color: Red">多个标签之间用空格表示</i>
+            </div>
+            <br />
+            <div class="editor-label">
+                你为什么想算这个?详细一点吧亲
+            </div>
+            <div class="editor-field">
+                @Html.TextAreaFor(model => model.Content, new { onkeydown = "javascript:$('#span_maxLength').html(this.value.length)" }) @Html.ValidationMessageFor(model => model.Content)
+            </div>
+            <br />
+            <div class="editor-label">
+                
+            </div>
+            <div class="editor-field">
+                长度限制为<span id="span_maxLength" maxlength="2000">0</span>/ 2000字
+            </div>
+            <br />
+            <div class="editor-label">
+                选择牌阵
+            </div>
+            <div class="editor-field">
+                <span id="FormationName" class="FormationName"></span>
+                @*<input type="button" onclick="$.ligerDialog.open({ url: '/Posting/SelectFormation', height: 580,width: 600, buttons: 
+        [ { text: '确定', onclick: function (item, dialog) { dialog.close();ShowBGTarots();  } }
+            ] });" value=" 选择 " />*@
+                <input type="button" onclick="javascript:OpenUrl('/Posting/SelectFormation','选择牌阵','ShowBGTarots()',580,880);" value=" 选择 " />
+                <i style="font-size: 11px; color: Red;">非常重要, 请选择牌阵才能看到整个页面功能</i>
+            </div>
+            <br />
+            @*背牌显示区*@
+            <div id="div_randomCards" class="editor-label">
+            </div>
+            <br />
+            @*牌阵显示区*@
+            <div id="div_cf_content" class="editor-label">
+                <div id="div_cf_operation">
+                    <i style="font-size: 11px; color: Red">请从上面的随机牌中抽取一些牌, 如果想重新抽取, 请 </i>
+                    <input type="button" id="btnF5" onclick="this.disabled=true;$('#btnsub')[0].disabled=true;$('#btnsub').removeClass('BigSubmit');ShowBGTarots();"
+                        value="重新洗牌" />
+                    <br />
+                    <input id="btnsub" type="submit" value="我已经选择好了,我可以提交了" disabled="disabled" />
+                </div>
+                <div id="div_CardFormation" style="">
+                </div>
+                <div id="div_CardDescribe" style="">
+                </div>
+                <div style="clear: both">
+                </div>
+            </div>
+        </div>
+        @Html.Partial("_smilefacepartial")
+    </div>
+
+    @Html.Partial("_LayoutSiteContentRightPart")
+        
+    <div style="clear: both">
+    </div>
+}
+<script type="text/javascript">
+    //    jQuery.validator.addMethod("check", function (value, element) {
+    //        var chrnum = /^([a-zA-Z0-9\u4e00-\u9fa5]+)$/; //^[\d\u4E00-\u9FA5]+$
+    //        return this.optional(element) || (chrnum.test(value));
+    //    }, "只能输入数字,字母,中文"); 
+    function ValidateForm() {
+        //更多validate验证方法见 jquery.validate.MethodsExt.js
+        return $("#form1").validate({
+            rules: {
+                'Content': { required: true, minlength: 5, maxlength: 2000 },
+                'Title': { required: true, minlength: 3, maxlength: 70 }
+                ,"CustomerTag": { maxlength: 30 }
+            },
+            messages: {
+                UserName: { required: '描述不能为空', minlength: '描述不能少于5个字' },
+                Title: { required: 'Title不能为空', minlength: '密码必须长于3位' }
+            }
+        }).form();
+    }
+</script>
+<script type="text/javascript">
+    document.forms['form1'].onsubmit = function () {
+        var flag = ValidateForm();
+        if (flag) {
+            Tools.CreateHidden({ name: 'PostType', value: 1 });
+            Tools.CreateHidden({ name: 'CardFormationInfo.CardFormationName', value: CardFormation.FormationName });
+            Tools.CreateHidden({ name: 'CardFormationInfo.CardFormationID', value: CardFormation.CardFormationID });
+            Tools.CreateHidden({ name: 'CardFormationInfo.W', value: CardFormation.PlaceWidth });
+            Tools.CreateHidden({ name: 'CardFormationInfo.H', value: CardFormation.PlaceHeight });
+
+            var cardinfos = [];
+            var imgs = $('img', ".divTarotCard");
+            if (imgs.length != CardFormation.CardsCount) { alert('牌阵错误, 请刷新, 给您带来的不便深感抱歉'); return; }
+            for (var i = 0; i < imgs.length; i++) {
+                var card = eval('(' + unescape(imgs[i].getAttribute("data")) + ')');
+                cardinfos.push("{");
+                cardinfos.push("'CardName':'" + card.CardName + "',");
+                cardinfos.push("'IsHandstand':'" + card.IsHandstand + "',");
+                cardinfos.push("'IsPointCard':'False',");
+                cardinfos.push("'X':'" + $(imgs[i].parentNode).css("left").replace('px', '') + "',");
+                cardinfos.push("'Y':'" + $(imgs[i].parentNode).css("top").replace('px', '') + "',");
+                cardinfos.push("'W':'" + $(imgs[i].parentNode).css("width").replace('px', '') + "',");
+                cardinfos.push("'H':'" + $(imgs[i].parentNode).css("height").replace('px', '') + "',");
+                cardinfos.push("'SortIndex':'" + $(imgs[i].parentNode).attr('index') + "',");
+                cardinfos.push("'Describe':'" + $(imgs[i].parentNode).attr('Describe') + "',");
+                cardinfos.push("'ImgUrl':'" + ((card.IsHandstand.toLowerCase() == 'true' ? handstandcardurl : cardurl) + card.CardID + ".jpg") + "'");
+                cardinfos.push("}$");
+            }
+            Tools.CreateHidden({ name: 'CardInfos', value: escape(cardinfos.join('')) });
+            $("input[type='submit']").attr("disabled", "disabled");
+
+            //ReplaceSmileOfTextArea();
+        } else
+            $("input[type='submit']").removeAttr('disabled');
+        return flag;
+    }
+</script>

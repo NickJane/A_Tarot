@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "MyUserInfo";
+    Layout = "~/Views/Shared/_LayoutUserCenter.cshtml";
+}
+@model UserManager.Framework.Model.Auth_UserInfoCore
+@using (Html.BeginForm())
+{
+@Html.Partial("_UserInfoParital", Model)
+
+<p>
+@Html.ValidationSummary("")
+    <input type="submit" value="确定" />
+</p>}

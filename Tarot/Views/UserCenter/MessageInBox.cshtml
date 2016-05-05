@@ -1,0 +1,55 @@
+﻿@model IList<Data.MongoFramework.ModelMate.Messages>
+
+@{
+    ViewBag.Title = "MessageInBox";
+    Layout = "~/Views/Shared/_LayoutUserCenter.cshtml";
+}
+
+@using Tarot.Models
+<h2>收件箱</h2>
+<p>信息保存30天.</p>
+<style type="text/css">
+    .div_postTitle{ border-bottom:1px dotted gray; margin-top:8px; padding-bottom:3px;}
+</style>
+@foreach (var item in Model)
+    {
+        <div class="div_postTitle">
+            <div style="float: left" class="textoverflow"><a href="javascript:void(0);" onclick="javascript:showcontent(this,'@item._id.ToString()')">
+                @Html.Raw(item.isRead?"":"<span style='color:red; margin-right:10px;'>new</span>")
+                @item.Title</a> 
+                </div>
+            <div style="float: right; width:150px; text-align:right; color:Gray" class="divInLineBlock">@item.PostTime.ToString("yyyy-MM-dd HH:mm:ss")</div>
+            <div style="float: right; width:100px; text-align:right" class="divInLineBlock textoverflow">
+                @if (item.FromUser.UserID == -1)
+                {
+                    @:<img src="../../favicon.ico" />塔罗来了
+                }
+                else
+                { 
+                    <span class="span_UserSpecial" UserSpecialID="@item.FromUser.UserSpecialID"></span><a href="/usercenter/userinfo/@item.FromUser.UserID" target="_blank">@item.FromUser.NicName</a>
+                }
+            </div>
+            <div style="clear: both">
+            </div>
+        </div>
+        <div class="div_postContent" style="display:none; border:1px solid red">
+            @item.Content
+            <br />
+            @if (item.FromUser.UserID != -1)
+            {
+            <input type="button" value="回复" onclick="javascript:location.href='/usercenter/messageform/@item.FromUser.NicName';" />
+            }
+        </div>
+    }
+    <div class="sabrosus">
+        @(Html.myPager((int)ViewBag.PageCount,
+            (int)ViewBag.CurrentPage, x => Url.Action("MessageInBox", new { id = x })))
+    </div>
+    <script type="text/javascript">
+        function showcontent(obj, mid) {
+            $(".div_postContent").hide();
+            var div = obj.parentNode.parentNode;
+            $(div).next().show();
+            $.post('/usercenter/readmessage?rd=' + Math.random(), { _id: mid }, function () { });
+        }
+    </script>

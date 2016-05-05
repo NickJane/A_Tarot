@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<DTSConfiguration>
+  <DTSConfigurationHeading>
+    <DTSConfigurationFileInfo GeneratedBy="JianJialin-PC\JianJialin" GeneratedFromPackageName="UpdateSqlFromMongo" GeneratedFromPackageID="{C2C8F1E6-B5C7-478D-B599-281329209E51}" GeneratedDate="2012/1/12 10:26:05"/>
+  </DTSConfigurationHeading>
+  <Configuration ConfiguredType="Property" Path="\Package.Connections[localhost.Tarot.sa].Properties[ConnectionString]" ValueType="String">
+    <ConfiguredValue>Data Source=localhost;User ID=sa;Initial Catalog=Tarot;Provider=SQLNCLI10.1;Application Name=SSIS-UpdateSqlFromMongo-{C66B6D20-0808-44B0-9B6A-CEFCBD06B0A2}localhost.Tarot.sa;Auto Translate=False;</ConfiguredValue>
+  </Configuration>
+</DTSConfiguration>

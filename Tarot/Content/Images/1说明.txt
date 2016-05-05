@@ -1,0 +1,2 @@
+﻿sysCardF. 存入塔罗牌阵示意图. 文件命名规范为 CardFormationID.jpeg
+Tarot  78张塔罗牌图

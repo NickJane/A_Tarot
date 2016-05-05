@@ -1,0 +1,123 @@
+﻿
+@using Authorizations.Framework.Enums;
+@using Lib.ClassExt;
+@using BLL.Enums;
+@using Data.Framework.Model;
+@model Data.Framework.Model.CardFormation
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="../../Scripts/CardFormation.js" type="text/javascript"></script>
+
+    <fieldset >
+        <legend>详情</legend>
+        		<div class="display-label">
+			@Html.LabelFor(model => model.CardFormationID)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.CardFormationID)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.FormationName)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.FormationName)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.Describe)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.Describe)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.Popularity)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.Popularity)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.State)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.State)
+		</div>
+		<br >
+
+		<div class="display-label">
+			@Html.LabelFor(model => model.NeedAllCards)
+		</div>
+		<div class="display-field">
+            @if (Model!=null && Model.NeedAllCards != 0)
+            {
+			    @(((BLL.Enums.TarotF_NeedAllCards)Model.NeedAllCards).ToLocalLanguage())
+            }
+		</div>
+		<br >
+        <div class="display-label">
+			@Html.LabelFor(model => model.PlaceHeight)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.PlaceHeight)
+		</div>
+		<br >
+		<div class="display-label">
+			@Html.LabelFor(model => model.PlaceWidth)
+		</div>
+		<div class="display-field">
+			@Html.DisplayFor(model => model.PlaceWidth)
+		</div>
+		<br >
+		<div style="width: 1024px; height:@(Model.PlaceHeight + "px");">
+            <div style="width: 700px; height:@(Model.PlaceHeight + "px"); border: 1px solid red; float: left;">
+                <div id="divFormation" style="width: @(Model.PlaceWidth + "px"); height:@(Model.PlaceHeight + "px"); border-right: 1px solid red;
+                    position: relative; float: left">
+                    
+                </div>
+                <div id="divFormationDesc" style="width: 190px;  float: right; border: 1px solid blue;">
+                </div>
+            </div>
+            @*<div style="width: 300px; height: 500px; border: 1px solid red; float: right">
+                X<input type="text" id="X"  readonly value="50" /><br />
+                Y<input type="text" id="Y" readonly value="50" /><br />
+                Width<input type="text" onkeyup="getHeight(this)" id="Width"  value="50" /><br />
+                Height<input type="text" id="Height"  value="85" /><br />
+                Index<input type="text"  id="Index" value="1" /><br />
+                说明<textarea type="text"  id="describe" value=""></textarea><br />
+                <input type="button" onclick="AddCard()" value="增加一张牌" />
+                <br />
+                <input type="button" onclick="RemoveCard()" value="删除这张牌" /><input type="text" id="txtDelIndex"
+                    style="width: 50px;" value="" />
+                <br />
+                <input type="button" onclick="javascript:if(confirm('确定')) {$('#divFormation').html('');$('#divFormationDesc').html('');$('#Index').val(1);$('#txtDelIndex').val('');}" value="删除所有牌" />
+            </div>*@
+        </div>
+
+    </fieldset>
+<p>
+@Html.ActionLink("Edit", "form", new { id = Model.CardFormationID }) 
+
+<a style="margin-left:20px;" href="/cardformation/list">返回</a>
+        </p>
+        <br />
+        @{var FormationCards = ViewBag.FormationCards as List<CardFormationCore>;}
+        <script type="text/javascript">
+            $(document).ready(function () { 
+                @foreach (var item in FormationCards)
+                {
+                    <text> 
+                        CardFormationJS.AddCardPlaceToDiv($("#divFormation")[0], $("#divFormationDesc")[0],
+                            { x: @item.X, y: @item.Y, w: @item.W, h: @item.H, index: @item.SortIndex, desc: '@item.Describe' });
+                    </text>
+                }
+            });
+        </script>

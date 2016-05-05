@@ -1,0 +1,7 @@
+﻿@if(Request.IsAuthenticated) {
+    <text>欢迎 <strong>@User.Identity.Name</strong>!
+    [ @Html.ActionLink("注销", "LogOff", "Account") ]</text>
+}
+else {
+    @:[ <a href="/account/logon?returnurl=@Request.Url.AbsolutePath">登录s</a> ]
+}

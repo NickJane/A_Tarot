@@ -1,0 +1,8 @@
+﻿.errorDiv{text-align:center;}
+.error{color:Red;}
+input.error{border: 1px solid #ff0000;background-color: #ffeeee;}
+.tip{padding-left:4px;}
+.tip1{padding-left:4px;color:Red;}
+.tip2{padding-left:4px;padding-left:4px;}
+label{padding-left:2px;}
+.kuangkuang{border:1px solid #FFE4C4; padding:2px 5px; background-color:#F0FFFF;cursor:hand;}
